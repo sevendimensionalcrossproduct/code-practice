@@ -8,4 +8,4 @@ try:
         print(number, "is odd.")
 
 except ValueError:
-    print("Error: Your input is not an integer.")
+    print("Error: Not an integer.")
