@@ -1,13 +1,12 @@
 # Primality endless loop:
 
 try:
-    bound = int(input('Prime numbers from: '))
+    number = int(input('Prime numbers from: '))
         
-    if bound < 1:
+    if number < 1:
         print('Your input must be greater than zero.')
         pass
 
-    number = bound
     while True:
         has_divisors = False
         for divisor in range(2, number):
