@@ -17,4 +17,4 @@ try:
         number = number + 1
         
 except ValueError:
-    print("Your input must be an integer")
+    print("Error: Not an integer.")
