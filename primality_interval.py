@@ -25,4 +25,4 @@ try:
                 
             number = number + 1
 except ValueError:
-    print('Not an integer.')
+    print('Error: Not an integer.')
