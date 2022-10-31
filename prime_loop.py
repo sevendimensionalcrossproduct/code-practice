@@ -1,10 +1,9 @@
 # Primality endless loop:
-
 try:
     number = int(input('Prime numbers from: '))
         
     if number < 1:
-        print('Your input must be greater than zero.')
+        print('Input must be greater than zero.')
         pass
 
     while True:
@@ -21,4 +20,4 @@ try:
         number = number + 1
         
 except ValueError:
-    print('Your input must be a positive integer.')
+    print('Error: Not an integer.')
