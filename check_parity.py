@@ -1,4 +1,4 @@
-# Check if input is even or odd
+# Check if input is even or odd:
 try:
     number = int(input("Enter integer: "))
         
