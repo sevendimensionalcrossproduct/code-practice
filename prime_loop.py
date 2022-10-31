@@ -1,4 +1,4 @@
-# Primality endless loop
+# Primality endless loop:
 
 try:
     bound = int(input('Prime numbers from: '))
