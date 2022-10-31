@@ -19,4 +19,4 @@ try:
         print(number, 'is not a prime number.')
 
 except ValueError:
-    print('Your input must be an integer.')
+    print('Error: Not an integer.')
