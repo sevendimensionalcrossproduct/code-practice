@@ -1,3 +1,3 @@
 # mvp
 
-Exercises in pylang
+Exercises in pylang and schemelang
