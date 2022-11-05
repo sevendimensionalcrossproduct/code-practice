@@ -38,11 +38,17 @@ try:
                 print(name,"is already on the menu")
                 
             else:
-                price = int(input("Enter item price: "))
-                menu[name] = price
-                print("The new menu is:")
-                for cream,pie in menu.items():
-                    print(cream,pie)
+                price = float(input("Enter item price: "))
+                
+                if price <= 0:
+                    print("Price must be a positive number")
+                    
+                else:
+                    menu[name] = price
+                    print("The new menu is:")
+                    
+                    for cream,pie in menu.items():
+                        print(cream,pie)
     
         except ValueError:
             print("bruh")
