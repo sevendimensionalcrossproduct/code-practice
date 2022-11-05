@@ -43,10 +43,27 @@ try:
                 print("The new menu is:")
                 for cream,pie in menu.items():
                     print(cream,pie)
-                    
+    
         except ValueError:
             print("bruh")
-
+            
+    def choice4():
+        try:
+            delete = str(input("Enter item to be deleted from menu: "))
+            
+            if delete in menu.keys():
+                del menu[delete]
+                print("The updated menu is:")
+                
+                for left_asscheek,right_asscheek in menu.items():
+                    print(left_asscheek, right_asscheek)
+                    
+            else:
+                print('Entry: "' + str(delete) + '" is not on the menu')
+            
+        except ValueError:
+            print("urmom")
+            
     option = int(input('\n1. Find item by name\n2. Find item by price\n3. Add new item\n4. Delete item\n'))
     
     if not 1 <= option <= 4:
@@ -63,6 +80,9 @@ try:
         
     elif option == 4:
         choice4()
+        
+except ValueError:
+    print("wtf")
         
 except ValueError:
     print("wtf")
