@@ -64,9 +64,9 @@ try:
         except ValueError:
             print("urmom")
             
-    option = int(input('\n1. Find item by name\n2. Find item by price\n3. Add new item\n4. Delete item\n'))
+    option = int(input('\n1. Find item by name\n2. Find item by price\n3. Add new item\n4. Delete item\n5. Exit program\n'))
     
-    if not 1 <= option <= 4:
+    if not 1 <= option <= 5:
         print ("poo")
         
     elif option == 1:
@@ -80,9 +80,9 @@ try:
         
     elif option == 4:
         choice4()
-        
-except ValueError:
-    print("wtf")
+    elif option ==5:
+        print("Byebye")
+#        quit()
         
 except ValueError:
     print("wtf")
