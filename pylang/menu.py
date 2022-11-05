@@ -88,7 +88,7 @@ try:
         choice4()
     elif option ==5:
         print("Byebye")
-#        quit()
+        quit()
         
 except ValueError:
     print("wtf")
