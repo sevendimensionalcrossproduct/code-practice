@@ -1,3 +1,5 @@
+#lab6_3
+
 print('MENU:')
 menu = {'coffee': 15, 'tea':7,'cheese toast':25,'water':5}
 for ass, poop in menu.items():
@@ -31,9 +33,17 @@ try:
             
     def choice3():
         try:
-            name = str(input("Enter new item name:"))
-            price = int(input("Enter price:"))
-            
+            name = str(input("Enter new item name: "))
+            if name in menu.keys():
+                print(name,"is already on the menu")
+                
+            else:
+                price = int(input("Enter item price: "))
+                menu[name] = price
+                print("The new menu is:")
+                for cream,pie in menu.items():
+                    print(cream,pie)
+                    
         except ValueError:
             print("bruh")
 
