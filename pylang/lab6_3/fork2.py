@@ -87,21 +87,25 @@ choice5()
 while True:    
     try:
         option = int(input('Instruction: '))
-    
-        actions = {
-        1: choice1,
-        2: choice2,
-        3: choice3,
-        4: choice4,
-        5: choice5,
-        6: lambda: print('\n1. Find item by name\n2. Find item by price\n3. Add new item\n4. Delete item\n5. Show item menu\n6. Show instruction menu\n7. Exit program\n'),
-        7: lambda: print('why syntax error lol')
-        }
         
-        if not option in actions:
-            print ("Error: Invalid instruction\n")
+        if option == 7:
+            print("byebye")
+            break
+            
         else:
-            actions[option]() 
+            actions = {
+            1: choice1,
+            2: choice2,
+            3: choice3,
+            4: choice4,
+            5: choice5,
+            6: lambda: print('\n1. Find item by name\n2. Find item by price\n3. Add new item\n4. Delete item\n5. Show item menu\n6. Show instruction menu\n7. Exit program\n')
+            }
+        
+            if not option in actions:
+                print ("Error: Invalid instruction\n")
+            else:
+                actions[option]() 
         
     except ValueError:
         print("Error: Not an integer\n")
