@@ -34,11 +34,11 @@ while True:
                     print("No items within budget found\n")
                 
                 else:
-                    print("Items within budget:")
+                    print("\nItems within budget:\n")
                     for ass, sex in menu.items():
                         if sex <= budget:
                             print(ass, sex)
-                print('\n')
+                    print('')
 
             except ValueError:
                 print('Not an integer\n')
@@ -62,10 +62,9 @@ while True:
                         for cream,pie in menu.items():
                             print(cream,pie)
                 print('')
-
                         
             except ValueError:
-                print("bruh\n")
+                print("Input must be an integer\n")
             
         def choice4():
             delete = str(input("Enter item to be deleted from menu: "))
@@ -97,14 +96,18 @@ while True:
             choice4()
         
         elif option == 5:
-            pass
-        
+            print('')
+            for ass, poop in menu.items():
+                print(ass, poop) 
+            print('')
+            
         elif option == 6:
-            pass
+            print('\n1. Find item by name\n2. Find item by price\n3. Add new item\n4. Delete item\n5. Show item menu\n6. Show instruction menu\n7. Exit program\n')
+
         
         elif option == 7:
             print("Byebye")
             break
         
     except ValueError:
-        print("wtf\n")
+        print("Error: Not an integer\n")
