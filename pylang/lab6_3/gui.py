@@ -91,7 +91,7 @@ ass.resizable(True,True)
 wrap = LabelFrame(ass, text="Menu")
 wrap.pack(fill='both',expand='yes',side=LEFT,padx=5,pady=5)
 
-for i in range (0,len(menu)):
-    [Label(wrap, text=ass).grid(row=i,column=1) for ass in menu.keys()]
+
+[Label(wrap, text=ass).grid(row=sex,column=1,padx=5,pady=5) for ass,sex in menu.items()]
 
 ass.mainloop()
