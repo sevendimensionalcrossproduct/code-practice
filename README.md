@@ -1,3 +1,1 @@
-# python be like hisssssss
-
-combuter
+# 1 + 1 = 11
