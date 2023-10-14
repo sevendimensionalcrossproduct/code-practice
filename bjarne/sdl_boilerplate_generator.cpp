@@ -79,13 +79,13 @@ void saveFile(const std::string& directory, const std::string& fileName, const s
 
 
 int main(int argc, char* argv[]){
-	if (argc != 3){
-		std::cerr << "Syntax: " << argv[0] << " <directory> <filename>" << std::endl;
+	if (argc < 2 || argc > 3){
+		std::cerr << "Syntax: " << argv[0] << " <directory> <filename> (leave directory string empty to write to current directory.)" << std::endl;
 		return 1;
 	}
 	
-	std::string directory = argv[1];
-	std::string fileName = argv[2];
+	std::string directory = (argc == 3) ? argv[1] : ".";
+	std::string fileName = argv[argc - 1];
 	std::string code = generateCode();
 
 	saveFile(directory, fileName, code);
