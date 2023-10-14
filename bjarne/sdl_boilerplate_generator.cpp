@@ -66,22 +66,26 @@ void saveFile(const std::string& directory, const std::string& fileName, const s
 	if (fileOutput.is_open()){
 		fileOutput << code;
 		fileOutput.close();
-		std::cout << "File saved as " << fileName << " in directory: " << directory << std::endl;
+
+		if (directory == "."){
+			std::cout << "File saved as " << fileName << ".cpp in current directory." << std::endl;
+		} else { 
+			std::cout << "File saved as " << fileName << ".cpp in directory: " << directory << std::endl;
+		}
 	} else {
 		std::cerr << "Error: Unable to create/open file." <<std::endl;
 	}
 }
 
 
-int main(){
-	std::string directory, fileName;
-
-	std::cout << "Enter directory: ";
-	std::cin >> directory;
-
-	std::cout << "Enter filename: ";
-	std::cin >> fileName;
-
+int main(int argc, char* argv[]){
+	if (argc != 3){
+		std::cerr << "Syntax: " << argv[0] << " <directory> <filename>" << std::endl;
+		return 1;
+	}
+	
+	std::string directory = argv[1];
+	std::string fileName = argv[2];
 	std::string code = generateCode();
 
 	saveFile(directory, fileName, code);
