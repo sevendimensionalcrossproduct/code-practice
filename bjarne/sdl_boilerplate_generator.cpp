@@ -60,18 +60,41 @@ std::string generateCode(void){
 	return boilerplate;
 }
 
+bool fileExists(const std::string& filePath){
+	std::ifstream fileThatMaybeExists(filePath);
+	return fileThatMaybeExists.good();
+}
+
+bool confirmOverwrite(const std::string& filePath){
+	std::cout << "Overwrite? (y/n, default n): ";
+	char response;
+	std::cin >> response;
+	return (response == 'y' || response == 'Y');
+}
+
 void saveFile(const std::string& directory, const std::string& fileName, const std::string& code){
-	std::ofstream fileOutput(directory + '/' + fileName + ".cpp");
+	std::string filePath(directory + '/' + fileName + ".cpp");
+	
+	if(fileExists(filePath)){
+		if (!confirmOverwrite(filePath)){
+			std::cout << "Aborted." << std::endl;
+			return;
+		}
+	}
+	
+	std::ofstream fileOutput(filePath);
 
 	if (fileOutput.is_open()){
 		fileOutput << code;
 		fileOutput.close();
 
 		if (directory == "."){
-			std::cout << "File saved as " << fileName << ".cpp in current directory." << std::endl;
+			std::cout << "File saved as " << fileName << ".cpp in current directory. Don't forget to link before compiling." << std::endl;
 		} else { 
 			std::cout << "File saved as " << fileName << ".cpp in directory: " << directory << std::endl;
+			std::cout << "Don't forget to link before compiling." << std::endl;
 		}
+
 	} else {
 		std::cerr << "Error: Unable to create/open file." <<std::endl;
 	}
