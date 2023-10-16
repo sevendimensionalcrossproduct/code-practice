@@ -66,9 +66,11 @@ bool fileExists(const std::string& filePath){
 
 bool confirmOverwrite(const std::string& filePath){
 	std::cout << "Overwrite? (y/n, default n): ";
-	char response;
-	std::cin >> response;
-	return (response == 'y' || response == 'Y');
+	
+	std::string response;
+	std::getline(std::cin, response);
+
+	return response.empty() ? false : (response == "y" || response == "Y");
 }
 
 void saveFile(const std::string& directory, const std::string& fileName, const std::string& code){
@@ -114,3 +116,4 @@ int main(int argc, char* argv[]){
 
 	return 0;
 }
+
