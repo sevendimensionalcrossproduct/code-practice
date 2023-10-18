@@ -2,8 +2,11 @@
 #include <ostream>
 #include <stdexcept>
 #include <vector>
+#include <iterator>
 
-#define START(n) ((i + n) % 7 + 1)
+using namespace std;
+
+#define START(n) ((i + n) % 7)
 
 std::vector<double> seven_dimensional_cross_product(const std::vector<double>& x, const std::vector<double>& y){
 	if (x.size() != 7 || y.size() != 7){
@@ -19,11 +22,13 @@ std::vector<double> seven_dimensional_cross_product(const std::vector<double>& x
 	return result;
 }
 
+
+
 void test(int n){
 	for(int i = -1; i < 6; i++){
 		//std::cout << (i + 1) % 7 + 1 <<std::endl;
 		//std::cout <<(i + 3) % 7 + 1 << std::endl;
-		std::cout <<(i + n) % 7 + 1 << std::endl;
+		std::cout <<(i + n) % 7 << std::endl;
 		//std::cout <<(i + 6) % 7 + 1 << std::endl;
 		
 		
@@ -31,8 +36,14 @@ void test(int n){
 }
 
 int main(void){
-	std::vector<double> x{1.0,0.0,0.0,0.0,0.0,0.0,0.0};
-	std::vector<double> y{1.0,0.0,0.0,0.0,0.0,0.0,0.0};
+	std::vector<double> x{0.0,0.0,0.0,0.0,0.0,0.0,1.0};
+	std::vector<double> y{0.0,1.0,0.0,0.0,0.0,0.0,0.0};
 	
-	test(7);
+	std::vector<double> result = seven_dimensional_cross_product(x,y);
+
+	int index = 1;
+	for(int element : result){
+		cout << index << ": " << element << endl;
+		index++;
+	}
 }
