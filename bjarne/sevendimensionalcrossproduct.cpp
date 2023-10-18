@@ -19,11 +19,11 @@ std::vector<double> seven_dimensional_cross_product(const std::vector<double>& x
 	return result;
 }
 
-void test(){
+void test(int n){
 	for(int i = -1; i < 6; i++){
 		//std::cout << (i + 1) % 7 + 1 <<std::endl;
 		//std::cout <<(i + 3) % 7 + 1 << std::endl;
-		std::cout <<(i + 1) % 7 + 1 << std::endl;
+		std::cout <<(i + n) % 7 + 1 << std::endl;
 		//std::cout <<(i + 6) % 7 + 1 << std::endl;
 		
 		
@@ -34,7 +34,5 @@ int main(void){
 	std::vector<double> x{1.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	std::vector<double> y{1.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	
-	for(int i = 0; i < 7; i++){
-		std::cout << seven_dimensional_cross_product(x,y)[i];
-	}
+	test(7);
 }
