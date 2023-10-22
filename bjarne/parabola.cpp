@@ -37,14 +37,37 @@ string to_superscript(long long int index){
 	}
 }
 
+string to_superscript_double(double input){
+	string superscripts[] = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
+	string result = "";
+	int characteristic = (floor(input));
+	double mantissa = input - characteristic;
+	cout << characteristic << endl;
+	cout << mantissa << endl;
+	
+	string result_characteristic = to_superscript(characteristic);
+	string result_mantissa = "";
+   	if (mantissa > 1e-16) {
+        	result_mantissa += "˙";         
+        	while (mantissa > 1e-3) {
+            		mantissa *= 10;
+            		int digit = static_cast<int>(floor(mantissa + 1e-9));
+            		result_mantissa += superscripts[digit];
+			mantissa -= digit;
+        	}
+   	}	
+
+	return result_characteristic + result_mantissa;
+}
+
 /*ostream& operator << (ostream& os, const monomial& some_monomial) {
 
 }*/
 
 int main(){
 	setlocale( LC_ALL, "en_US.utf8" );	
-	long long int number;
+	double number;
 	cin >> number;
-	cout << to_superscript(number) << endl;
+        cout << to_superscript_double(number) << endl; 
 	return 0;
 }
