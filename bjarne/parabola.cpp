@@ -3,7 +3,7 @@
 #include <cmath>
 #include <functional>
 #include <string>
-
+//˙ ⁻
 using namespace std;
 
 class monomial{
@@ -12,12 +12,29 @@ class monomial{
 		vector<double> index;
 };
 
-string to_superscript(int index){
+string to_superscript(long long int index){
 	string superscripts[] = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
-	string index_string = to_string(index);
-	string result;
+	string result = "";
 
-	return superscripts[3];
+        if (index < 0) {
+        	index = -index;
+		while(index>0){
+        		int digit = index % 10;
+        		result = superscripts[digit] + result;
+        		index /= 10;
+		}
+		return "⁻" + result; 
+	} else if (index == 0) {
+		result = "⁰";
+		return result;
+    	} else {
+	while (index > 0) {
+        	int digit = index % 10;
+        	result = superscripts[digit] + result;
+        	index /= 10;
+    	}
+	return result;
+	}
 }
 
 /*ostream& operator << (ostream& os, const monomial& some_monomial) {
@@ -26,7 +43,8 @@ string to_superscript(int index){
 
 int main(){
 	setlocale( LC_ALL, "en_US.utf8" );	
-
-	cout << to_superscript(3) << endl;
+	long long int number;
+	cin >> number;
+	cout << to_superscript(number) << endl;
 	return 0;
 }
