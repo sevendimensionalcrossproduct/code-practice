@@ -1,9 +1,10 @@
 #include <iostream>
+#include <variant>
 #include <vector>
 #include <cmath>
 #include <functional>
 #include <string>
-//˙ ⁻
+
 using namespace std;
 
 class monomial{
@@ -40,32 +41,42 @@ string to_superscript(long long int index){
 string to_superscript_double(double input){
 	string superscripts[] = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
 	string result = "";
-	int characteristic = (floor(input));
-	double mantissa = input - characteristic;
-	cout << characteristic << endl;
-	cout << mantissa << endl;
-	
-	string result_characteristic = to_superscript(characteristic);
-	string result_mantissa = "";
-   	if (mantissa > 1e-16) {
-        	result_mantissa += "˙";         
-        	while (mantissa > 1e-3) {
-            		mantissa *= 10;
-            		int digit = static_cast<int>(floor(mantissa + 1e-9));
-            		result_mantissa += superscripts[digit];
-			mantissa -= digit;
-        	}
-   	}	
 
-	return result_characteristic + result_mantissa;
+	//Characteristic to superscript
+	int characteristic = (floor(input));
+    	std::string result_characteristic = to_superscript(characteristic);
+
+
+
+	//Mantissa to superscript
+	string mantissa_str = to_string(input - floor(input)).substr(2);
+	size_t value = mantissa_str.find_last_not_of('0');
+	if (value != std::string::npos) {
+		mantissa_str= mantissa_str.substr(0, value + 1);
+	}	
+	
+	int mantissa_int = stoi(mantissa_str);
+
+    	std::string result_mantissa = to_superscript(mantissa_int);
+
+    	return result_characteristic + "·" + result_mantissa;
 }
 
-/*ostream& operator << (ostream& os, const monomial& some_monomial) {
+string get_mantissa(double input){
+	string result = to_string(input - floor(input)).substr(2);
+	
+	size_t value = result.find_last_not_of('0');
+	if (value != std::string::npos) {
+		result = result.substr(0, value + 1);
+	}
 
-}*/
+	return result;
+}
+
+
 
 int main(){
-	setlocale( LC_ALL, "en_US.utf8" );	
+
 	double number;
 	cin >> number;
         cout << to_superscript_double(number) << endl; 
