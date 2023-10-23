@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <cmath>
-#include <variant>
 #include "./superscript.h"
 
 using namespace std;
@@ -16,13 +15,13 @@ class monomial{
 		//constructor
 		monomial(char init_variable = 'x', double init_coefficient = 1.0, double init_exponent = 1.0) : variable(init_variable), exponent(init_exponent), coefficient(init_coefficient){};
 
-		//setter & getter
+		//getters
 		double get_exponent() const {return exponent;}
 		double get_coefficient() const {return coefficient;}
 		char get_variable() const{return variable;}
 
 		double evaluate(double x){
-			return 0;
+			return coefficient * pow(x, exponent);
 		}
 
 		string evaluate_explicit(double x){
@@ -38,8 +37,7 @@ ostream& operator << (ostream& output_stream, const monomial& some_monomial){
 			output_stream << some_monomial.get_coefficient();
 		}
 		if (some_monomial.get_exponent() == 0){
-		//empty
-		
+			//pass
 		} else if(some_monomial.get_exponent() == 1) {
 			output_stream << some_monomial.get_variable();
 		} else {
@@ -51,7 +49,7 @@ ostream& operator << (ostream& output_stream, const monomial& some_monomial){
 } 
 
 int main(){
-	monomial x('x',1.0,0.25);
-	cout << x <<endl;
+	monomial x('x',3.0,0);
+	cout << x.evaluate(4) <<endl;
 	return 0;
 }
