@@ -1,24 +1,30 @@
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include <cmath>
+#include <variant>
 #include "./superscript.h"
 
 using namespace std;
 
 class monomial{
 	private:
-		char variable;
 		double exponent;
 		double coefficient;
 	public:
-		//constructor
-		monomial(char init_variable = 'x', double init_coefficient = 1.0, double init_exponent = 1.0) : variable(init_variable), exponent(init_exponent), coefficient(init_coefficient){};
+		//constructors
+		monomial(double init_coefficient = 1.0, double init_exponent = 1.0) 
+			: exponent(init_exponent), coefficient(init_coefficient){};
+		
+		//
+		operator double() const {
+        		return coefficient;  // Or any other logic to convert your monomial to a double
+    		}
 
 		//getters
 		double get_exponent() const {return exponent;}
 		double get_coefficient() const {return coefficient;}
-		char get_variable() const{return variable;}
 
 		double evaluate(double x){
 			return coefficient * pow(x, exponent);
@@ -27,6 +33,13 @@ class monomial{
 		string evaluate_explicit(double x){
 			return  to_string(coefficient) + "(" + to_string(x) +  ")" + to_superscript_double(exponent);
 		}
+};
+
+class polynomial{
+	private:
+		vector<monomial> f;
+	public:
+		polynomial() {}
 };
 
 ostream& operator << (ostream& output_stream, const monomial& some_monomial){
@@ -39,17 +52,34 @@ ostream& operator << (ostream& output_stream, const monomial& some_monomial){
 		if (some_monomial.get_exponent() == 0){
 			//pass
 		} else if(some_monomial.get_exponent() == 1) {
-			output_stream << some_monomial.get_variable();
+			output_stream << 'x';
 		} else {
-			output_stream << some_monomial.get_variable();
+			output_stream << 'x';
 			output_stream << to_superscript_double(some_monomial.get_exponent());
 		} 
 	}
 	return output_stream;
 } 
 
+ostream& operator << (ostream& output_stream, const polynomial& some_polynomial){
+	for(monomial : some_polynomial){
+
+	}
+}
+
+monomial operator + (const monomial& augend, const monomial& addend)  {
+	if (augend.get_exponent() == addend.get_exponent()){
+		return monomial(augend.get_coefficient() + addend.get_coefficient(), addend.get_exponent());
+	} else {
+		throw invalid_argument("bad");	
+	} 
+}
+
+
 int main(){
-	monomial x('x',3.0,0);
-	cout << x.evaluate(4) <<endl;
+	monomial a(3.0,0.0);
+	monomial b(5.0,0.0);
+	monomial c(3.0,0.0);
+	cout << a + b  << endl;
 	return 0;
 }
