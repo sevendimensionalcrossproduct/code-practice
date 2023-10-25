@@ -45,9 +45,27 @@ ostream& operator << (ostream& output_stream, signal some_signal){
 	return output_stream;
 }
 
-int main(){
-	signal a({0,0,0,2});
-	signal b({4,0,0,0,0,165});
+signal convolve(signal &X, signal &Y){
+	vector<double> result(X.get_coefficients().size() + Y.get_coefficients().size() -1);
+	
+	for(int A = 0; A < X.get_coefficients().size(); A++){
+		for (int B = 0; B < Y.get_coefficients().size(); B++){
+			result[A + B] += X.get_coefficients()[A] * Y.get_coefficients()[B];
+		}
+	}
+	return signal(result);
+}
 
-	cout << a + b << endl;
+
+int main(){
+	signal a({1,2,3});
+	signal b({4,5,6});
+	
+	vector<double> A = {1,2,3};
+	vector<double> B = {4,5,6};
+
+	signal c = convolve(a,b);
+	cout << '(' << a << ")(" << b << ") = " << c <<  endl;
+
+	//cout << a + b << endl;
 }
