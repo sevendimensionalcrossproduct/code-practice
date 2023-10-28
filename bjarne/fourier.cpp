@@ -56,16 +56,30 @@ signal convolve(signal &X, signal &Y){
 	return signal(result);
 }
 
+signal differentiate(signal &X){
+	vector<double> result(X.get_coefficients().size() - 1);
+
+	for(int i = 0; i < X.get_coefficients().size(); i++){
+		result[i] = (i+1) * X.get_coefficients()[i+1];
+	}
+	return signal(result);
+}
 
 int main(){
 	signal a({1,2,3});
 	signal b({4,5,6});
+	signal q({4,33,6,0,27});
 	
 	vector<double> A = {1,2,3};
 	vector<double> B = {4,5,6};
 
-	signal c = convolve(a,b);
-	cout << '(' << a << ")(" << b << ") = " << c <<  endl;
+	signal c = convolve(b,a);
+	signal d = differentiate(q);
+
+	cout << q << endl;
+	cout << d << endl;
+
+	//cout << '(' << a << ")(" << b << ") = " << c <<  endl;
 
 	//cout << a + b << endl;
 }
