@@ -1,9 +1,26 @@
 #include <iostream>
 #include <cmath>
 #include <string>
+#include <unordered_map>
 
 using namespace std;
 
+unordered_map<char, string> superscript_map;
+
+void create_map(){
+    superscript_map['0'] = "⁰";
+    superscript_map['1'] = "¹";
+    superscript_map['2'] = "²";
+    superscript_map['3'] = "³";
+    superscript_map['4'] = "⁴";
+    superscript_map['5'] = "⁵";
+    superscript_map['6'] = "⁶";
+    superscript_map['7'] = "⁷";
+    superscript_map['8'] = "⁸";
+    superscript_map['9'] = "⁹";
+    superscript_map['.'] = "·";
+
+}
 
 string superscript(long long int index){
 	string superscripts[] = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
@@ -95,21 +112,37 @@ string to_superscript_double(double input){
 string get_mantissa(double input){
 	string result = to_string(input - floor(input)).substr(2);
 	
+	/*
 	size_t value = result.find_last_not_of('0');
 	if (value != string::npos) {
 		result = result.substr(0, value + 1);
 	}
+	*/
+
+	return result;
+}
+
+string hash_to_superscript(double input){
+	create_map();
+	string input_string = to_string(input);
+	string result = "";
+	
+	for(char digit: input_string)	{
+		result +=  superscript_map[digit];
+	}
+	
 
 	return result;
 }
 
 
-
-
 int main(){
 
-	double number;
-	cin >> number;
-         cout << to_superscript_double(number) << endl; 
+	//double number;
+	//cin >> number;
+        //cout << to_superscript_double(number) << endl; 
+	
+	create_map();
+	cout << hash_to_superscript(-899999991293129.1239) << endl;
 	return 0;
 }
