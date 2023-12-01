@@ -143,6 +143,6 @@ int main(){
         //cout << to_superscript_double(number) << endl; 
 	
 	create_map();
-	cout << hash_to_superscript(-899999991293129.1239) << endl;
+	cout << hash_to_superscript(8.123914152845) << endl;
 	return 0;
 }
