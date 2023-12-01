@@ -17,7 +17,7 @@ superindex input =
     _ -> ' '
 
 stringToIndices :: String -> String
-stringToIndices = map superindex
+stringToIndices  = map superindex 
 
 getIndex :: IO ()
 getIndex =
