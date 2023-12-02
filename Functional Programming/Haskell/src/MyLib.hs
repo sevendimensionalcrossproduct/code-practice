@@ -6,9 +6,11 @@ import Index (stringToIndices)
 square :: Int -> Int
 square x = x * x 
 
-exponentiate :: Double ->Int -> Double
+exponentiate :: Double ->Double -> Double
 exponentiate _ 0 = 1.0
-exponentiate base indx = base * exponentiate base (indx - 1)
+exponentiate base expn
+  | expn > 0 = base ** expn
+  | otherwise = 1.0 / (base ** (-expn))
 
 main :: IO ()
 main =
@@ -21,5 +23,5 @@ main =
   let expnNum = read expn :: Double in
 
   putStr (base <>  stringToIndices expn <> " = ") >> 
-  print (exponentiate baseNum (round expnNum))
+  print (exponentiate baseNum expnNum)
 
