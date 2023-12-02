@@ -1,22 +1,25 @@
-module MyLib (someFunc) where
+module MyLib where
 
 import Index (stringToIndices)
 
-someFunc :: IO ()
-someFunc = 
-  putStrLn "someFunc" >>
-  someFunc
-
 
 square :: Int -> Int
-square = \ x -> x * x 
+square x = x * x 
 
-calculate :: IO ()
-calculate =
-  putStr "Number: " >>
-  getLine >>= \ input ->
+exponentiate :: Double ->Int -> Double
+exponentiate _ 0 = 1.0
+exponentiate base indx = base * exponentiate base (indx - 1)
 
-  let number = read input :: Int in
-  
-  putStr (input <> stringToIndices "2" <> " = ") >>
-  print (square number)
+main :: IO ()
+main =
+  putStr "Base: " >>
+  getLine >>= \ base -> 
+  let baseNum = read base :: Double in
+ 
+  putStr "Exponent: " >>
+  getLine >>= \ expn ->
+  let expnNum = read expn :: Double in
+
+  putStr (base <>  stringToIndices expn <> " = ") >> 
+  print (exponentiate baseNum (round expnNum))
+
