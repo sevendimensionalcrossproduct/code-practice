@@ -5,12 +5,19 @@ data DualNumber = DualNumber Double Double
 instance Show DualNumber where
     show (DualNumber x y)
         | x == 0 && y == 0.0 = "0" 
+
+        | x /= 0 && y == 1 = show x ++ " + ε"
+        | x /= 0 && y == -1 = show x ++ " - ε"
+        | x == 0 && y == 1 = "ε"
+        | x == 0 && y == -1 = "-ε"
+         
+
         | x /= 0 && y > 0 = show x ++ " + " ++ show y ++ "ε" 
         | x /= 0 && y < 0 = show x ++ " - " ++ show (abs y) ++ "ε"
 
         | x == 0 && y /= 0 = show y ++ "ε" 
         | x /= 0 && y == 0 = show x 
-      
+        
         | otherwise = "0"
         
 
