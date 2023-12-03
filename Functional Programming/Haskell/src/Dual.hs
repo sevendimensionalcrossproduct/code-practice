@@ -3,7 +3,7 @@ module Dual where
 data DualNumber = DualNumber Double Double
 
 instance Show DualNumber where
-  show (DualNumber x y) = show x ++ " x "  ++ show y ++ "E" 
+  show (DualNumber x y) = show x ++ " + "  ++ show y ++ "E" 
 
 getReal :: DualNumber -> Double
 getReal (DualNumber x _) = x 
