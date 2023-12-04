@@ -1,7 +1,8 @@
 module Dual where
 
-data DualNumber = DualNumber Double Double
+import Calc
 
+data DualNumber = DualNumber Double Double
 
 {--Instantiation of Dual Numbers--}
 instance Show DualNumber where
@@ -46,46 +47,6 @@ div (DualNumber x1 y1) (DualNumber x2 y2) = DualNumber (x1 / x2) (((y1 * x2) - (
 
 
 {--Elementary Operations--}
-cot :: Double ->Double
-cot x = 1 / tan x
-
-sec :: Double ->Double 
-sec x = 1 / cos x
-
-csc :: Double ->Double
-csc x = 1 / sin x
-
-acot :: Double ->Double
-acot x
-  | isInfinite x = pi / 2 * signum x
-  | x == 0 = pi / 2
-  | x < 0 = atan(1/x) + pi
-  | x > 0 = atan(1/x)
-  | otherwise = 0/0
-
-asec :: Double ->Double
-asec x = acos(1/x)
-
-acsc :: Double ->Double
-acsc x = asin(1/x)
-
-coth :: Double ->Double
-coth x = 1 / tanh x
-
-sech :: Double ->Double
-sech x = 1 / cosh x
-
-csch :: Double ->Double
-csch x = 1 / sinh x
-
-acoth :: Double ->Double
-acoth x = atanh (1/x)
-
-asech :: Double ->Double
-asech x = acosh (1/x)
-
-acsch :: Double ->Double
-acsch x = asinh (1/x) 
 
 dnSin :: DualNumber -> DualNumber 
 dnSin z = DualNumber (sin(getReal z)) (cos (getReal z) * getEpsilon z)
