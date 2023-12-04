@@ -63,6 +63,12 @@ acot x
   | x > 0 = atan(1/x)
   | otherwise = 0/0
 
+asec :: Double ->Double
+asec x = acos(1/x)
+
+acsc :: Double ->Double
+acsc x = asin(1/x)
+
 dnSin :: DualNumber -> DualNumber 
 dnSin z = DualNumber (sin(getReal z)) (cos (getReal z) * getEpsilon z)
 
