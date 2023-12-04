@@ -123,7 +123,7 @@ dnArcsch z = DualNumber (acsch(getReal z)) ()
 
 
 dnLn :: DualNumber -> DualNumber
-dnLn = DualNumber () ()
+dnLn z = DualNumber (log(getReal z)) ()
 
 dnLog :: DualNumber -> DualNumber
 dnLog = DualNumber () ()
@@ -135,11 +135,12 @@ dnReciprocal:: DualNumber -> DualNumber
 dnReciprocal = DualNumber () ()
 
 dnSqrt:: DualNumber -> DualNumber
+
 dnSqrt = DualNumber () ()
 
 dnCbrt:: DualNumber -> DualNumber
 dnCbrt = DualNumber () (
 
 dnReciprocal:: DualNumber -> DualNumber
+
 dnReciprocal = DualNumber () ()
---}
