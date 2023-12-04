@@ -69,6 +69,24 @@ asec x = acos(1/x)
 acsc :: Double ->Double
 acsc x = asin(1/x)
 
+coth :: Double ->Double
+coth x = 1 / tanh x
+
+sech :: Double ->Double
+sech x = 1 / cosh x
+
+csch :: Double ->Double
+csch x = 1 / sinh x
+
+acoth :: Double ->Double
+acoth x = atanh (1/x)
+
+asech :: Double ->Double
+asech x = acosh (1/x)
+
+acsch :: Double ->Double
+acsch x = asinh (1/x) 
+
 dnSin :: DualNumber -> DualNumber 
 dnSin z = DualNumber (sin(getReal z)) (cos (getReal z) * getEpsilon z)
 
