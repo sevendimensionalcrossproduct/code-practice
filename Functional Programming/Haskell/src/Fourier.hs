@@ -5,10 +5,17 @@ import Index (stringToIndices)
 newtype Polynomial = Polynomial [Double]
 
 instance Show Polynomial where
-    show (Polynomial xs) = showList (zip [1..] xs)
+    show (Polynomial xs) = showPolynomial (zip [1..] xs)
         where
-            showList :: [(Int, Double)] ->String
-            showList [] = ""
-            showList [(i,a)] = show a ++ "x" ++ stringToIndices (show i) 
-            showList ((i,a):rest) = show a ++ "x" ++ stringToIndices (show i) ++ " + " ++ showList rest
+            showPolynomial :: [(Int, Double)] -> String
+            showPolynomial [] = ""
+            showPolynomial [(i, a)] = formatTerm a i
+            showPolynomial ((i, a):rest) = formatTerm a i ++ " + " ++ showPolynomial rest
 
+            formatTerm :: Double -> Int -> String
+            formatTerm a i
+                | isIntegral a = show (round a :: Int) ++ "x" ++ stringToIndices (show i)
+                | otherwise = show a ++ "x" ++ stringToIndices (show i)
+
+            isIntegral :: Double -> Bool
+            isIntegral x = snd (properFraction x :: (Integer, Double)) == 0
