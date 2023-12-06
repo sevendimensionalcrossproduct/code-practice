@@ -14,15 +14,16 @@ instance Show Polynomial where
         showStream :: Integer -> Double -> String
         showStream i a
             | a == 0 = ""
-            | otherwise = getSign i a ++ formatCoefficient a ++ formatX i a ++ formatIndex i
+            | otherwise = getSign i a ++ formatCoefficient i a ++ formatX i a ++ formatIndex i
 
         getSign :: Integer -> Double -> String
         getSign i x = case i of
                 0 -> if signum x == -1 then "-"  else ""
                 _ -> if signum x == -1 then " - " else if signum x == 1 then " + " else ""
 
-        formatCoefficient :: Double -> String
-        formatCoefficient a
+        formatCoefficient :: Integer ->Double -> String
+        formatCoefficient i a
+            | abs a == 1 && i > 1 = ""
             | isIntegral a = show (abs (round a) :: Int)
             | otherwise = show (abs a)
 
@@ -40,3 +41,8 @@ instance Show Polynomial where
             | otherwise = stringToIndices (show i)
 
 
+add :: Polynomial -> Polynomial -> Polynomial
+add (Polynomial xs) (Polynomial ys) = Polynomial [x + y | (x, y) <-zip xs' ys'] where
+    maxLength = max (length xs) (length ys)
+    xs' = xs ++ replicate (maxLength - length xs) 0
+    ys' = ys ++ replicate (maxLength - length ys) 0
