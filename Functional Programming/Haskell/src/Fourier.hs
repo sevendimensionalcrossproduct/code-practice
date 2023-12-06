@@ -14,13 +14,12 @@ instance Show Polynomial where
         showStream :: Integer -> Double -> String
         showStream i a
             | a == 0 = ""
-            | otherwise = getSign a ++ formatCoefficient a ++ formatX i a ++ formatIndex i
+            | otherwise = getSign i a ++ formatCoefficient a ++ formatX i a ++ formatIndex i
 
-        getSign :: Double -> String
-        getSign x
-            | signum x == -1 = " - "
-            | signum x == 1 = " + "
-            | otherwise = ""
+        getSign :: Integer -> Double -> String
+        getSign i x = case i of
+                0 -> if signum x == -1 then "-"  else ""
+                _ -> if signum x == -1 then " - " else if signum x == 1 then " + " else ""
 
         formatCoefficient :: Double -> String
         formatCoefficient a
