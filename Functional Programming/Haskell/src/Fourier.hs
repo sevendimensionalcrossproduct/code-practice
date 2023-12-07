@@ -1,6 +1,7 @@
 module Fourier where
 
 import Index (stringToIndices)
+import Data.List (tails)
 
 newtype Polynomial = Polynomial [Double]
 
@@ -42,7 +43,12 @@ instance Show Polynomial where
 
 
 add :: Polynomial -> Polynomial -> Polynomial
-add (Polynomial xs) (Polynomial ys) = Polynomial [x + y | (x, y) <-zip xs' ys'] where
+add (Polynomial xs) (Polynomial ys) = Polynomial [x + y |(x, y) <- zip xs' ys'] where
     maxLength = max (length xs) (length ys)
     xs' = xs ++ replicate (maxLength - length xs) 0
     ys' = ys ++ replicate (maxLength - length ys) 0
+
+
+convolve :: Polynomial -> Polynomial -> Polynomial
+convolve (Polynomial xs) (Polynomial ys) = Polynomial [sum  (zipWith (*) (reverse xs) i) | i <- tails pady] where
+    pady = replicate (length xs - 1) 0 ++ ys
