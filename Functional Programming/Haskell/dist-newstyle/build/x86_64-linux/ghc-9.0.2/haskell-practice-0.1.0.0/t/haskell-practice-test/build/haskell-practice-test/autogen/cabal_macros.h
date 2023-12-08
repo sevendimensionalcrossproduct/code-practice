@@ -20,16 +20,16 @@
   (major1) == 4 && (major2) <  15 || \
   (major1) == 4 && (major2) == 15 && (minor) <= 1)
 #endif /* MIN_VERSION_base */
-/* package template-haskell-2.17.0.0 */
-#ifndef VERSION_template_haskell
-#define VERSION_template_haskell "2.17.0.0"
-#endif /* VERSION_template_haskell */
-#ifndef MIN_VERSION_template_haskell
-#define MIN_VERSION_template_haskell(major1,major2,minor) (\
-  (major1) <  2 || \
-  (major1) == 2 && (major2) <  17 || \
-  (major1) == 2 && (major2) == 17 && (minor) <= 0)
-#endif /* MIN_VERSION_template_haskell */
+/* package haskell-practice-0.1.0.0 */
+#ifndef VERSION_haskell_practice
+#define VERSION_haskell_practice "0.1.0.0"
+#endif /* VERSION_haskell_practice */
+#ifndef MIN_VERSION_haskell_practice
+#define MIN_VERSION_haskell_practice(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  1 || \
+  (major1) == 0 && (major2) == 1 && (minor) <= 0)
+#endif /* MIN_VERSION_haskell_practice */
 
 /* tool gcc-13.2.1 */
 #ifndef TOOL_VERSION_gcc
@@ -122,11 +122,8 @@
   (major1) == 2 && (major2) == 41 && (minor) <= 0)
 #endif /* MIN_TOOL_VERSION_strip */
 
-#ifndef CURRENT_PACKAGE_KEY
-#define CURRENT_PACKAGE_KEY "haskell-practice-0.1.0.0-inplace"
-#endif /* CURRENT_packageKey */
 #ifndef CURRENT_COMPONENT_ID
-#define CURRENT_COMPONENT_ID "haskell-practice-0.1.0.0-inplace"
+#define CURRENT_COMPONENT_ID "haskell-practice-0.1.0.0-inplace-haskell-practice-test"
 #endif /* CURRENT_COMPONENT_ID */
 #ifndef CURRENT_PACKAGE_VERSION
 #define CURRENT_PACKAGE_VERSION "0.1.0.0"

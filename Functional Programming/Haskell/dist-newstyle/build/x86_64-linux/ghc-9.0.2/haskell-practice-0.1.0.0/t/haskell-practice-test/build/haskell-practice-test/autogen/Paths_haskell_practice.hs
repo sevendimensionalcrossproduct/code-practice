@@ -43,7 +43,7 @@ getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: 
 
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 bindir     = "/home/serna/.cabal/bin"
-libdir     = "/home/serna/.cabal/lib/x86_64-linux-ghc-9.0.2/haskell-practice-0.1.0.0-inplace"
+libdir     = "/home/serna/.cabal/lib/x86_64-linux-ghc-9.0.2/haskell-practice-0.1.0.0-inplace-haskell-practice-test"
 dynlibdir  = "/home/serna/.cabal/lib/x86_64-linux-ghc-9.0.2"
 datadir    = "/home/serna/.cabal/share/x86_64-linux-ghc-9.0.2/haskell-practice-0.1.0.0"
 libexecdir = "/home/serna/.cabal/libexec/x86_64-linux-ghc-9.0.2/haskell-practice-0.1.0.0"

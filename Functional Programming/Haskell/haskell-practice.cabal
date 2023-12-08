@@ -68,7 +68,9 @@ library
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.15.1.0
+    build-depends:    base ^>=4.15.1.0,
+                      template-haskell >=2.17.0.0
+                      
 
     -- Directories containing source files.
     hs-source-dirs:   src
