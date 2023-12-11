@@ -70,6 +70,7 @@ executable API-Practice
 
     -- Other library packages from which modules are imported.
     build-depends:    base ^>=4.15.1.0
+                      ,scotty^>=0.20.1
 
     -- Directories containing source files.
     hs-source-dirs:   app
