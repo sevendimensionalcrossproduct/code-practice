@@ -20,6 +20,26 @@
   (major1) == 4 && (major2) <  15 || \
   (major1) == 4 && (major2) == 15 && (minor) <= 1)
 #endif /* MIN_VERSION_base */
+/* package directory-1.3.6.2 */
+#ifndef VERSION_directory
+#define VERSION_directory "1.3.6.2"
+#endif /* VERSION_directory */
+#ifndef MIN_VERSION_directory
+#define MIN_VERSION_directory(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  3 || \
+  (major1) == 1 && (major2) == 3 && (minor) <= 6)
+#endif /* MIN_VERSION_directory */
+/* package filepath-1.4.2.1 */
+#ifndef VERSION_filepath
+#define VERSION_filepath "1.4.2.1"
+#endif /* VERSION_filepath */
+#ifndef MIN_VERSION_filepath
+#define MIN_VERSION_filepath(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  4 || \
+  (major1) == 1 && (major2) == 4 && (minor) <= 2)
+#endif /* MIN_VERSION_filepath */
 /* package scotty-0.20.1 */
 #ifndef VERSION_scotty
 #define VERSION_scotty "0.20.1"
@@ -30,6 +50,16 @@
   (major1) == 0 && (major2) <  20 || \
   (major1) == 0 && (major2) == 20 && (minor) <= 1)
 #endif /* MIN_VERSION_scotty */
+/* package wai-middleware-static-0.9.2 */
+#ifndef VERSION_wai_middleware_static
+#define VERSION_wai_middleware_static "0.9.2"
+#endif /* VERSION_wai_middleware_static */
+#ifndef MIN_VERSION_wai_middleware_static
+#define MIN_VERSION_wai_middleware_static(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  9 || \
+  (major1) == 0 && (major2) == 9 && (minor) <= 2)
+#endif /* MIN_VERSION_wai_middleware_static */
 
 /* tool gcc-13.2.1 */
 #ifndef TOOL_VERSION_gcc
