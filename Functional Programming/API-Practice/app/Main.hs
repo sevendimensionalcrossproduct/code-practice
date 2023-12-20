@@ -24,4 +24,4 @@ main =
   get "/first" (file (currentDir </> "public" </> "html1.html")) >>
   get "/second" (file (currentDir </> "public" </> "html2.html")) >>
   get "/second/third" (file (currentDir </> "public" </> "html3.html")) 
-              )
+ )
