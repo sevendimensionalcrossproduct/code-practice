@@ -6,7 +6,18 @@
   </head>
   <body>
     <header>This is the second page!!</header>
-    <main></main>
-    <footer></footer>
+    <button id="butt">surprise!</button>
+    <main>askdakslflksdf</main>
+    <footer>foot</footer>
+
+    <script>
+      document.getElementById("butt").addEventListener("click", function() {
+        fetch("/second/third")
+          .then(response => response.text())
+          .then(data => {
+            document.body.innerHTML = data;
+          })
+      });
+    </script>
   </body>
 </html>
