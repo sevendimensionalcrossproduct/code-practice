@@ -6,7 +6,43 @@
   </head>
   <body>
     <header>WELCOME USERS</header>
-    <main></main>
-    <footer></footer>
+
+    <button onclick="fetchUsers()">GET USERS</button>
+    <button onclick="createUser()">CREATE USER</button>
+    <button onclick="updateUser()">UPDATE USER</button>
+    
+    <div id="output"></div>
+    
+    <script>
+      function fetchUsers(){
+        fetch('http://localhost:3001/users')
+          .then(response=> response.json())
+          .then(data => displayOutput(data));
+      }
+      
+      function createUser(){
+        const newUsername = prompt('Enter username: ');
+        const newUser = { userName: newUsername };
+
+        fetch('http://localhost:3001/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newUser),
+        })
+        .then(response => response.json())
+        .then(data => displayOutput(data));
+      } //doesnt work lol
+
+      function updateUser() {
+        const userId = prompt('Enter user ID to update: ');
+        const updateUsername = prompt('Enter username to update: ');
+      }
+
+      function displayOutput(data) {
+        document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+      }
+    </script>
   </body>
 </html>
