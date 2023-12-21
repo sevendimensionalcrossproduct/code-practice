@@ -10,6 +10,16 @@
   (major1) == 0 && (major2) <  1 || \
   (major1) == 0 && (major2) == 1 && (minor) <= 0)
 #endif /* MIN_VERSION_API_Practice */
+/* package aeson-2.2.1.0 */
+#ifndef VERSION_aeson
+#define VERSION_aeson "2.2.1.0"
+#endif /* VERSION_aeson */
+#ifndef MIN_VERSION_aeson
+#define MIN_VERSION_aeson(major1,major2,minor) (\
+  (major1) <  2 || \
+  (major1) == 2 && (major2) <  2 || \
+  (major1) == 2 && (major2) == 2 && (minor) <= 1)
+#endif /* MIN_VERSION_aeson */
 /* package base-4.15.1.0 */
 #ifndef VERSION_base
 #define VERSION_base "4.15.1.0"
