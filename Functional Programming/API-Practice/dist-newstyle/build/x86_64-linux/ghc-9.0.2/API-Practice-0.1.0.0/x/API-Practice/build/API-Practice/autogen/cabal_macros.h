@@ -30,6 +30,16 @@
   (major1) == 4 && (major2) <  15 || \
   (major1) == 4 && (major2) == 15 && (minor) <= 1)
 #endif /* MIN_VERSION_base */
+/* package bytestring-0.10.12.1 */
+#ifndef VERSION_bytestring
+#define VERSION_bytestring "0.10.12.1"
+#endif /* VERSION_bytestring */
+#ifndef MIN_VERSION_bytestring
+#define MIN_VERSION_bytestring(major1,major2,minor) (\
+  (major1) <  0 || \
+  (major1) == 0 && (major2) <  10 || \
+  (major1) == 0 && (major2) == 10 && (minor) <= 12)
+#endif /* MIN_VERSION_bytestring */
 /* package directory-1.3.6.2 */
 #ifndef VERSION_directory
 #define VERSION_directory "1.3.6.2"

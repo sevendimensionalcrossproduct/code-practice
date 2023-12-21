@@ -3,13 +3,16 @@
   <head>
     <meta charset="utf-8">
     <title>User Page</title>
+    <link rel="stylesheet" href="users.css">
   </head>
   <body>
     <header>WELCOME USERS</header>
 
     <button onclick="fetchUsers()">GET USERS</button>
+    <button onclick="hideUsers()">HIDE USERS</button>
     <button onclick="createUser()">CREATE USER</button>
     <button onclick="updateUser()">UPDATE USER</button>
+    <button onclick="wipe()">WIPE</button>
     
     <div id="output"></div>
     
@@ -22,7 +25,7 @@
       
       function createUser(){
         const newUsername = prompt('Enter username: ');
-        const newUser = { userName: newUsername };
+        const newUser = { userId: -1, userName: newUsername };
 
         fetch('http://localhost:3001/users', {
           method: 'POST',
@@ -31,18 +34,32 @@
           },
           body: JSON.stringify(newUser),
         })
-        .then(response => response.json())
-        .then(data => displayOutput(data));
-      } //doesnt work lol
+        fetchUsers();
+      } 
 
       function updateUser() {
         const userId = prompt('Enter user ID to update: ');
         const updateUsername = prompt('Enter username to update: ');
       }
 
+      function wipe(){
+        fetch('http://localhost:3001/users', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+          fetchUsers();
+      }
+
       function displayOutput(data) {
         document.getElementById('output').innerText = JSON.stringify(data, null, 2);
       }
+      
+      function hideUsers() {
+        document.getElementById('output').innerText = ''
+      }
+
     </script>
   </body>
 </html>
