@@ -52,6 +52,18 @@ main =
     liftIO (writeUsersToJsonFile (publicDir </> "users.json") updatedUsers) >> json updatedUsers
     ) >>
   
+  patch "/users/:id" (
+    captureParam "id" >>= \ userIdParameter ->
+    jsonData >>= \ updatedUser ->
+    liftIO (readUsersFromJsonFile (publicDir </> "users.json")) >>= \ users ->
+    let userId' = read userIdParameter :: Integer in
+    let updatedUsers = map (\ user -> if userId' == userId user 
+        then user {userName = userName updatedUser} 
+        else user) users in
+    json updatedUsers >>
+    liftIO (writeUsersToJsonFile (publicDir </> "users.json") updatedUsers)
+  ) >>
+  
   delete "/users" ( liftIO (wipeUsersJsonFile (publicDir </> "users.json")) >> text "JSON database wiped") 
  )
 

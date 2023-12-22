@@ -12,6 +12,7 @@
     <button onclick="hideUsers()">HIDE USERS</button>
     <button onclick="createUser()">CREATE USER</button>
     <button onclick="getUsername()">GET USERNAME</button>
+    <button onclick="updateUsername()">UPDATE USERNAME</button>
     <button onclick="wipe()">WIPE</button>
     
     <div id="output"></div>
@@ -27,7 +28,7 @@
       
       function createUser(){
         const newUsername = prompt('Enter username: ');
-        const newUser = { userId: -1, userName: newUsername };
+        const newUser = { userId: -1, userName: newUsername }; //userId calculated by API
 
         fetch('http://localhost:3001/users', {
           method: 'POST',
@@ -71,6 +72,22 @@
           alert(' bad retrieving user');
         });
       }
+
+      
+      function updateUsername() {
+        const userId = parseInt(prompt('id'));
+        const updatedUser = prompt ('new username');
+
+        fetch(`http://localhost:3001/users/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+          body: JSON.stringify({ userId: userId, userName: updatedUser}),
+        })
+        .then(fetchUsers);
+        }
+
 
       function wipe(){
         fetch('http://localhost:3001/users', {
