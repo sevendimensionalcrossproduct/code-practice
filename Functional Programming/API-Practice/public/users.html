@@ -11,12 +11,14 @@
     <button onclick="fetchUsers()">GET USERS</button>
     <button onclick="hideUsers()">HIDE USERS</button>
     <button onclick="createUser()">CREATE USER</button>
-    <button onclick="updateUser()">UPDATE USER</button>
+    <button onclick="getUsername()">GET USERNAME</button>
     <button onclick="wipe()">WIPE</button>
     
     <div id="output"></div>
     
     <script>
+      let userJSON = 'http://localhost:3001/users';
+
       function fetchUsers(){
         fetch('http://localhost:3001/users')
           .then(response=> response.json())
@@ -37,9 +39,37 @@
         fetchUsers();
       } 
 
-      function updateUser() {
-        const userId = prompt('Enter user ID to update: ');
-        const updateUsername = prompt('Enter username to update: ');
+      function getUsername() {
+        const userId = prompt('Enter user ID to find: ');
+        
+        fetch (userJSON, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        .then(response => {
+          if (!response.ok){
+            throw new Error ('bad response');
+          }
+            return response.json();
+          })
+
+        .then(users => {
+          const user = users.find(u => u.userId === parseInt(userId));  
+ 
+          if (user) {
+            alert(`Username for user ID ${userId}: ${user.userName}`);
+          } else {
+            alert(`User with ID ${userId} not found.`);
+          }
+        })
+
+        .catch(error => {
+          console.error('bad retrieving user', error);
+          alert(' bad retrieving user');
+        });
       }
 
       function wipe(){

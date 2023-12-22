@@ -10,6 +10,7 @@ import Data.Text.Lazy (Text)
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.Aeson (ToJSON, FromJSON, parseJSON, encode, eitherDecode, withObject, (.:), toJSON, object, (.=), (.:))
 import Control.Monad.IO.Class (liftIO)
+import Data.List (find)
 
 data User = User {userId :: Integer, userName :: Text}
 
@@ -25,12 +26,23 @@ main =
   getCurrentDirectory >>= \ currentDir ->let publicDir = currentDir </> "public" in
 
   scotty 3001 (
-
   middleware (staticPolicy (addBase publicDir)) >>
 
+  get "/" (html (mconcat ["<a href=\"http://localhost:3001/userpage\">u probably meant this</a>"])) >>
+  get "/favicon.ico" (file (publicDir </> "favicon.ico")) >> 
   get "/users" (file (publicDir </> "users.json")) >>
+  get "/userpage" (file (publicDir </> "users.html")) >>
 
-   
+  get "/users/:id" (
+    captureParam "id" >>= \ userIdParameter ->
+      liftIO (readUsersFromJsonFile (publicDir </> "users.json")) >>= \ users ->
+      let userId' = read userIdParameter :: Integer in
+      let user' = find (\ u -> userId' == userId u) users in 
+      case user' of
+        Just foundUser -> json foundUser
+        Nothing -> text "Nope"
+  ) >>
+ 
   post "/users"  (
     liftIO (readUsersFromJsonFile (publicDir </> "users.json")) >>= \ users ->
         
@@ -40,14 +52,7 @@ main =
     liftIO (writeUsersToJsonFile (publicDir </> "users.json") updatedUsers) >> json updatedUsers
     ) >>
   
-  delete "/users" ( liftIO (wipeUsersJsonFile (publicDir </> "users.json")) >> text "JSON database wiped") >>
-
-  get "/favicon.ico" (file (publicDir </> "favicon.ico")) >>
-  
-  
-  get "/userpage" (file (publicDir </> "users.html")) >>
-  
-  get "/" (text "Wilkommen") 
+  delete "/users" ( liftIO (wipeUsersJsonFile (publicDir </> "users.json")) >> text "JSON database wiped") 
  )
 
 -- Read existing users from the JSON file
