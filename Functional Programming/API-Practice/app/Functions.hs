@@ -11,6 +11,7 @@ import Data.Text.Lazy (Text)
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.Aeson (ToJSON, FromJSON, parseJSON, encode, eitherDecode, withObject, (.:), toJSON, object, (.=), (.:))
 import Control.Monad.IO.Class (liftIO)
+import Control.Monad (void)
 import Data.List (find, findIndex)
 import Web.Scotty.Trans (ActionT)
 
@@ -27,28 +28,17 @@ instance FromJSON User where
 publicDirectoryPath :: IO FilePath
 publicDirectoryPath = getCurrentDirectory >>= \currentDir -> return (currentDir </> "public")
 
--- Read existing users from the JSON file
-readUsersFromJsonFile :: FilePath -> IO [User]
-readUsersFromJsonFile filePath = do
-  contents <- BS.readFile filePath
-  case eitherDecode contents of
-    Left err -> do
-      putStrLn $ "Error decoding JSON file: " ++ err
-      return []
-    Right users -> return users
-
+-- Read JSON file
 readJson :: FilePath -> ActionT IO [User]
-readJson jsonPath = liftIO (readUsersFromJsonFile jsonPath)
+readJson jsonPath = liftIO (
+  either
+    (\err -> putStrLn ("Error decoding JSON file: " ++ err) >> return [])
+    return . eitherDecode =<< BS.readFile jsonPath)
 
 
 -- Write users to the JSON file
-writeUsersToJsonFile :: FilePath -> [User] -> IO ()
-writeUsersToJsonFile filePath users =
-  BS.writeFile filePath (encode users)
-
 writeJson :: FilePath -> [User] -> ActionT IO ()
-writeJson jsonPath newData = liftIO ( writeUsersToJsonFile jsonPath newData)
-
+writeJson jsonPath newData = void(liftIO(BS.writeFile jsonPath (encode newData)))
 
 -- Update IDs
 updateIds :: Integer -> [User] -> [User]
@@ -56,9 +46,5 @@ updateIds _ [] = []
 updateIds startId (user:users) = user { userId = startId } : updateIds (startId + 1) users
 
 -- Wipe JSON file
-wipeUsersJsonFile :: FilePath -> IO ()
-wipeUsersJsonFile filePath = BS.writeFile filePath "[]"
-
 wipeJson :: FilePath -> ActionT IO ()
-wipeJson jsonPath = liftIO (wipeUsersJsonFile jsonPath)
-
+wipeJson jsonPath = void (liftIO(BS.writeFile jsonPath "[]"))
