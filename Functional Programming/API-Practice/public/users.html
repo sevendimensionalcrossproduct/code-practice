@@ -13,6 +13,7 @@
     <button onclick="createUser()">CREATE USER</button>
     <button onclick="getUsername()">GET USERNAME</button>
     <button onclick="updateUsername()">UPDATE USERNAME</button>
+    <button onclick="deleteUsername()"> DELETE USERNAME</button>
     <button onclick="wipe()">WIPE</button>
     
     <div id="output"></div>
@@ -87,6 +88,30 @@
         })
         .then(fetchUsers);
         }
+
+      function deleteUsername() {
+        const userId = parseInt(prompt('id'));
+        
+      fetch(`http://localhost:3001/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Success:', data);
+        fetchUsers();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+      }
 
 
       function wipe(){

@@ -10,7 +10,7 @@ import Data.Text.Lazy (Text)
 import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.Aeson (ToJSON, FromJSON, parseJSON, encode, eitherDecode, withObject, (.:), toJSON, object, (.=), (.:))
 import Control.Monad.IO.Class (liftIO)
-import Data.List (find)
+import Data.List (find, findIndex)
 
 data User = User {userId :: Integer, userName :: Text}
 
@@ -63,6 +63,19 @@ main =
     json updatedUsers >>
     liftIO (writeUsersToJsonFile (publicDir </> "users.json") updatedUsers)
   ) >>
+
+  delete "/users/:id" (
+    captureParam "id" >>= \ userIdParameter ->
+    let userId' = read userIdParameter :: Integer in 
+      liftIO(readUsersFromJsonFile (publicDir </> "users.json")) >>= \ users ->
+      let userIndex = findIndex (\ user -> userId' == userId user) users in
+        case userIndex of
+          Just index ->
+            let (prefix, suffix) = splitAt index users in
+            let updatedUsers = prefix ++ updateIds (fromIntegral (index + 1)) (drop 1 suffix) in json updatedUsers >>
+            liftIO (writeUsersToJsonFile (publicDir </> "users.json") updatedUsers)
+          Nothing ->text "not found"
+  ) >>
   
   delete "/users" ( liftIO (wipeUsersJsonFile (publicDir </> "users.json")) >> text "JSON database wiped") 
  )
@@ -81,6 +94,11 @@ readUsersFromJsonFile filePath = do
 writeUsersToJsonFile :: FilePath -> [User] -> IO ()
 writeUsersToJsonFile filePath users =
   BS.writeFile filePath (encode users)
+
+-- Update IDs
+updateIds :: Integer -> [User] -> [User]
+updateIds _ [] = []
+updateIds startId (user:users) = user { userId = startId } : updateIds (startId + 1) users
 
 -- Wipe JSON file
 wipeUsersJsonFile :: FilePath -> IO ()
