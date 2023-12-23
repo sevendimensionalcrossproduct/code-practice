@@ -21,9 +21,7 @@ main =
   let icon = publicDirectory </> "favicon.ico" in
   let jsonStorage = publicDirectory </> "users.json" in
 
-  scotty 3001 (
-
-
+  scotty 3001 ( 
   middleware (staticPolicy (addBase publicDirectory)) >>
 
   --Filesystem Bindings
@@ -33,19 +31,17 @@ main =
   get "/userpage" (file usersHtmlFile) >>
 
   get "/users/:id" (
-    captureParam "id" >>= \ userIdParameter ->
-      readJson jsonStorage >>= \ users ->
-
-      let userId' = read userIdParameter :: Integer in
-      let user = find (\ u -> userId' == userId u) users in 
-      case user of
-        Just foundUser ->json foundUser
-        Nothing -> text "Nope"
+    captureParam "id" >>= \ parsedId' ->let parsedId = read parsedId' :: Integer in
+    readJson jsonStorage >>= \ users ->
+    
+    let user = find (\ u -> parsedId == userId u) users in 
+    case user of
+      Just foundUser ->json foundUser
+      Nothing -> text "Nope"
   ) >>
  
   post "/users"  (
     readJson jsonStorage >>= \ users ->
-        
     jsonData >>= \newUser ->let newUserId = fromIntegral (length users) + 1 in
     let updatedUsers = users ++ [newUser { userId = newUserId }] in json updatedUsers >>
 
@@ -53,32 +49,32 @@ main =
     ) >>
   
   patch "/users/:id" (
-    captureParam "id" >>= \ userIdParameter ->
+    captureParam "id" >>= \ parsedId' ->let parsedId = read parsedId' :: Integer in
     jsonData >>= \ updatedUser ->
     readJson jsonStorage >>= \ users ->
 
-    let userId' = read userIdParameter :: Integer in
-    let updatedUsers = map (\ user -> if userId' == userId user 
-        then user {userName = userName updatedUser} 
-        else user) users in json updatedUsers >>
+    let updatedUsers = 
+          map (\ user -> 
+            if parsedId == userId user 
+            then user {userName = userName updatedUser} 
+            else user) 
+          users in json updatedUsers >>
 
     writeJson jsonStorage updatedUsers
   ) >>
 
   delete "/users/:id" (
-    captureParam "id" >>= \ userIdParameter ->
-    let userId' = read userIdParameter :: Integer in 
-      readJson jsonStorage >>= \ users ->
-      let userIndex = findIndex (\ user -> userId' == userId user) users in
-        case userIndex of
-          Just index ->
-            let (prefix, suffix) = splitAt index users in
-            let updatedUsers = prefix ++ updateIds (fromIntegral (index + 1)) (drop 1 suffix) in json updatedUsers >>
-            writeJson jsonStorage updatedUsers
-          Nothing ->text "not found"
+  captureParam "id" >>= \ parsedId' ->let parsedId = read parsedId' :: Integer in 
+  readJson jsonStorage >>= \ users ->
+
+  let userIndex = findIndex (\ user -> parsedId == userId user) users in
+    case userIndex of
+      Just foundIndex ->
+        let (usersBefore, usersRest) = splitAt foundIndex users in
+        let updatedUsers = usersBefore ++ updateIds (fromIntegral (foundIndex + 1)) (drop 1 usersRest) in json updatedUsers >>
+        writeJson jsonStorage updatedUsers
+      Nothing ->text "not found"
   ) >>
   
   delete "/users" (wipeJson jsonStorage >> text "JSON database wiped") 
  )
-
-
