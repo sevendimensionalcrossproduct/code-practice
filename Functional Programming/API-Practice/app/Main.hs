@@ -4,14 +4,8 @@ module Main where
 
 import Functions
 import Web.Scotty
-import Web.Scotty.Trans (ActionT)
 import Network.Wai.Middleware.Static
-import System.Directory (getCurrentDirectory)
 import System.FilePath ((</>))
-import Data.Text.Lazy (Text)
-import qualified Data.ByteString.Lazy.Char8 as BS
-import Data.Aeson (ToJSON, FromJSON, parseJSON, encode, eitherDecode, withObject, (.:), toJSON, object, (.=), (.:))
-import Control.Monad.IO.Class (liftIO)
 import Data.List (find, findIndex)
 
 main :: IO ()
@@ -60,7 +54,8 @@ main =
             else user) 
           users in json updatedUsers >>
 
-    writeJson jsonStorage updatedUsers
+    writeJson jsonStorage updatedUsers >>
+    json (find (\user -> userId user == parsedId) updatedUsers)
   ) >>
 
   delete "/users/:id" (

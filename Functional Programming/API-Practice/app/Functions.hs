@@ -3,8 +3,6 @@
 
 module Functions where
 
-import Web.Scotty
-import Network.Wai.Middleware.Static
 import System.Directory (getCurrentDirectory)
 import System.FilePath ((</>))
 import Data.Text.Lazy (Text)
@@ -12,7 +10,6 @@ import qualified Data.ByteString.Lazy.Char8 as BS
 import Data.Aeson (ToJSON, FromJSON, parseJSON, encode, eitherDecode, withObject, (.:), toJSON, object, (.=), (.:))
 import Control.Monad.IO.Class (liftIO)
 import Control.Monad (void)
-import Data.List (find, findIndex)
 import Web.Scotty.Trans (ActionT)
 
 
