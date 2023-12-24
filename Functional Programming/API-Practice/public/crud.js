@@ -59,7 +59,7 @@ function getUsername() {
 
 //UPDATE USERNAME
 function updateUsername() {
-  const userId = prompt('Enter user ID to find: ');
+  const userId = prompt('Enter user ID to update: ');
   
   fetch (userJSON, {
     method: 'GET',
@@ -116,24 +116,60 @@ function updateUsername() {
 
 //DELETE USER
 function deleteUsername() {
-  const userId = parseInt(prompt('id'));
+  const userId = prompt('Enter user ID to delete: ');
   
-fetch(`http://localhost:3001/users/${userId}`, {
-  method: 'DELETE',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-  return response.json();
-})
-.then(fetchUsers())
-.catch(error => {
-  console.error('Error:', error);
-});
+  fetch (userJSON, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+
+  .then(response => {
+    if (!response.ok){
+      throw new Error ('bad response');
+    }
+      return response.json();
+    })
+
+  .then(data => {
+    const users = Array.isArray(data) ? data : [data];
+    const user = users.find(u => u.userId === parseInt(userId));  
+
+    if (user) {
+      fetch(`http://localhost:3001/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+
+      .then(fetchUsers())
+
+      .catch(error => {
+        console.error('Error:', error);
+      });
+      
+      alert(`Username ${user.userName} was successfully deleted`);
+    } else {
+      alert(`User with ID ${userId} not found.`);
+    }
+  })
+  
+  .then(fetchUsers())
+  
+  .catch(error => {
+    console.error('bad retrieving user', error);
+    alert(' bad retrieving user');
+  });
+  
 }
 
 //WIPE JSON STORAGE
@@ -144,7 +180,8 @@ function wipe(){
       'Content-Type': 'application/json',
     },
   })
-    fetchUsers();
+  .then (alert('userbase wiped successfully'))
+  .then (fetchUsers());
 }
 
 //Misc
