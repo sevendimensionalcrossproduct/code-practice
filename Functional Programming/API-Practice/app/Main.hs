@@ -24,6 +24,9 @@ main =
   get "/users" (file jsonStorage) >>
   get "/userpage" (file usersHtmlFile) >>
 
+  get "/crudB.js" (setHeader "Content-Type" "application/javascript" >> file (publicDirectory </> "crudB.js")) >>
+  get "/client_main.js" (setHeader "Content-Type" "application/javascript)" >> file (publicDirectory </> "client_main.js")) >>
+
   get "/users/:id" (
     captureParam "id" >>= \ parsedId' ->let parsedId = read parsedId' :: Integer in
     readJson jsonStorage >>= \ users ->

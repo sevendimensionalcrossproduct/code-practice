@@ -1,32 +1,34 @@
 /* CRUD functions module */
+/*http://localhost:3001/crudB.js*/
 
 
 //Fetch methods
-export function createFetch(){
-  fetch('http://localhost:3001/users', {
+export function createFetch(updatedUser){
+  return fetch('http://localhost:3001/users', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ userId: parseInt(userId), userName: updatedUser })
-  })
+    body: JSON.stringify(updatedUser)
+  });
 }
 
 export function readFetch(){
-  fetch('http::/localhost:3001/users',{
+  return fetch('http://localhost:3001/users',{
     method: 'GET',
     headers: {'Content-Type': 'application/json'}
   })
 }
 
-export function updateFetch(){
-  fetch('http::/localhost:3001/users',{
+export function updateFetch(userId, updatedUser){
+  return fetch(`http://localhost:3001/users/${userId}`,{
     method: 'PATCH',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({ userId: parseInt(userId), userName: updatedUser })
   })
 }
 
-export function deleteFetch(){
-  fetch('http::/localhost:3001/users',{
+export function deleteFetch(input){
+  const url = input ? `http://localhost:3001/users/${input}` : 'http://localhost:3001/users';
+  return fetch(url, {
     method: 'DELETE',
     headers: {'Content-Type': 'application/json'}
   })
@@ -45,7 +47,7 @@ export function findId(userId, crudAction){
       const user = users.find(u => u.userId === parseInt(userId));
 
       if(user){
-        crudAction()
+        crudAction(user)
       } else {
         alert(`User with ID ${userId} not found.`);
       }

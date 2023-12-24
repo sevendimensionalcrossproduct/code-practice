@@ -1,38 +1,42 @@
-import * as crud from './crud(1).js';
+/*Main client-side script*/
+/*http://localhost:3001/client_main.js*/
+
+import * as crud from './crudB.js';
+window.crud = crud;
 
 //FETCH USER
-function fetchUsers(){
-  fetch('http//localhost:3001/users')
+window.fetchUsers = function(){
+  fetch('http://localhost:3001/users')
     .then(response => response.json())
     .then (data => document.getElementById('output').innerText = JSON.stringify(data, null, 2))
 }
 
 //CREATE NEW USER
-function createUser(){
+window.createUser= function(){
   const newUsername = prompt('Enter username: ');
   const newUser = { userId: -1, userName: newUsername };
   
-  crud.createFetch()
+  crud.createFetch(newUser)
     .then(fetchUsers);
 }
 
 //DISPLAY userName
-function getUsername() {
+window.getUsername = function() {
   const userId = prompt('Enter user ID: ');
 
-  crud.findId(userId, () => {
+  crud.findId(userId, (user) => {
     alert(`Username for user ID ${userId}: ${user.userName}`)
   })
 }
 
 //UPDATE userName
-function updateUsername() {
+window.updateUsername = function() {
   const userId = prompt('Enter user ID to update: ');
 
   crud.findId(userId, () =>{
     const updatedUser = prompt('new username');
 
-    crud.updateFetch()
+    crud.updateFetch(userId, updatedUser)
       .then(response => {
         if(!response.ok){
           throw new Error(`bad ${response.status}`);
@@ -43,14 +47,15 @@ function updateUsername() {
       .then(updatedUser => {
         alert(`Username updated successfully: ${updatedUser.userName}`);
       })
+      .then(fetchUsers);
   })
 }
 
-function deleteUsername() {
+window.deleteUsername = function() {
   const userId = prompt('Enter user ID to delete: ');
 
-  crud.findId(userId, () =>{
-    crud.deleteFetch()
+  crud.findId(userId, (user) =>{
+    crud.deleteFetch(parseInt(userId))
       .then(response => {
         if (!response.ok){
           throw new Error(`bad response ${response.status}`)
@@ -62,20 +67,20 @@ function deleteUsername() {
         console.error('error:', error);
       })
       
-      .then(fetchUsers())
+      .then(fetchUsers)
 
       alert(`username ${user.userName} was successfully deleted`);
   })
 }
 
 //WIPE JSON STORAGE
-function wipe(){
+window.wipe = function(){
   crud.deleteFetch()
     .then(alert('userbase wiped successfully'))
-    .then(fetchUsers());
+    .then(fetchUsers);
 }
 
 //Hide JSON div
-function hideUsers() {
+window.hideUsers = function() {
   document.getElementById('output').innerText = ''
 }
