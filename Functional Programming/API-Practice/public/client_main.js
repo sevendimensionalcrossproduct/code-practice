@@ -1,7 +1,7 @@
 /*Main client-side script*/
 /*http://localhost:3001/client_main.js*/
 
-import * as crud from './crudB.js';
+import * as crud from './crud.js';
 window.crud = crud;
 
 //FETCH USER

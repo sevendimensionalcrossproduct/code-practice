@@ -1,195 +1,59 @@
-let userJSON = 'http://localhost:3001/users';
+/* CRUD functions module */
+/*http://localhost:3001/crudB.js*/
 
-//FETCH USERS
-function fetchUsers(){
-  fetch('http://localhost:3001/users')
-    .then(response=> response.json())
-    .then(data => displayOutput(data));
-}
 
-//CREATE NEW USER
-function createUser(){
-  const newUsername = prompt('Enter username: ');
-  const newUser = { userId: -1, userName: newUsername }; //userId calculated by API
-
-  fetch('http://localhost:3001/users', {
+//Fetch methods
+export function createFetch(updatedUser){
+  return fetch('http://localhost:3001/users', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newUser),
-  })
-  .then(fetchUsers());
-} 
-
-//DISPLAY USERNAME
-function getUsername() {
-  const userId = prompt('Enter user ID to find: ');
-  
-  fetch (userJSON, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-
-  .then(response => {
-    if (!response.ok){
-      throw new Error ('bad response');
-    }
-      return response.json();
-    })
-
-  .then(data => {
-    const users = Array.isArray(data) ? data : [data];
-    const user = users.find(u => u.userId === parseInt(userId));  
-
-    if (user) {
-      alert(`Username for user ID ${userId}: ${user.userName}`);
-    } else {
-      alert(`User with ID ${userId} not found.`);
-    }
-  })
-
-  .catch(error => {
-    console.error('bad retrieving user', error);
-    alert(' bad retrieving user');
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(updatedUser)
   });
 }
 
-//UPDATE USERNAME
-function updateUsername() {
-  const userId = prompt('Enter user ID to update: ');
-  
-  fetch (userJSON, {
+export function readFetch(){
+  return fetch('http://localhost:3001/users',{
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: {'Content-Type': 'application/json'}
   })
-
-  .then(response => {
-    if (!response.ok){
-      throw new Error ('bad response');
-    }
-      return response.json();
-    })
-
-  .then(data => {
-    const users = Array.isArray(data) ? data : [data];
-    const user = users.find(u => u.userId === parseInt(userId));  
-
-    if (user) {
-      const updatedUser = prompt('new username');
-
-      fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: parseInt(userId), userName: updatedUser }),
-      })
-
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`bad ${response.status}`);
-        }
-        return response.json();
-      })
-
-      .then(updatedUser => {
-        alert(`Username updated successfully: ${updatedUser.userName}`);
-      })
-        
-    } else {
-      alert(`User with ID ${userId} not found.`);
-    }
-  })
-  
-  .then(fetchUsers)
-
-  .catch(error => {
-    console.error('bad retrieving user', error);
-    alert(' bad retrieving user');
-  });
 }
 
-//DELETE USER
-function deleteUsername() {
-  const userId = prompt('Enter user ID to delete: ');
-  
-  fetch (userJSON, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+export function updateFetch(userId, updatedUser){
+  return fetch(`http://localhost:3001/users/${userId}`,{
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ userId: parseInt(userId), userName: updatedUser })
   })
-
-  .then(response => {
-    if (!response.ok){
-      throw new Error ('bad response');
-    }
-      return response.json();
-    })
-
-  .then(data => {
-    const users = Array.isArray(data) ? data : [data];
-    const user = users.find(u => u.userId === parseInt(userId));  
-
-    if (user) {
-      fetch(`http://localhost:3001/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-
-      .then(fetchUsers())
-
-      .catch(error => {
-        console.error('Error:', error);
-      });
-      
-      alert(`Username ${user.userName} was successfully deleted`);
-    } else {
-      alert(`User with ID ${userId} not found.`);
-    }
-  })
-  
-  .then(fetchUsers())
-  
-  .catch(error => {
-    console.error('bad retrieving user', error);
-    alert(' bad retrieving user');
-  });
-  
 }
 
-//WIPE JSON STORAGE
-function wipe(){
-  fetch('http://localhost:3001/users', {
+export function deleteFetch(input){
+  const url = input ? `http://localhost:3001/users/${input}` : 'http://localhost:3001/users';
+  return fetch(url, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: {'Content-Type': 'application/json'}
   })
-  .then (alert('userbase wiped successfully'))
-  .then (fetchUsers());
 }
 
-//Misc
-function displayOutput(data) {
-  document.getElementById('output').innerText = JSON.stringify(data, null, 2);
-}
+export function findId(userId, crudAction){
+  readFetch()
+    .then(response => {
+      if (!response.ok){
+        throw new Error ('bad response');
+      }
+      return response.json();
+    })
+    .then(data => {
+      const users = Array.isArray(data) ? data : [data];
+      const user = users.find(u => u.userId === parseInt(userId));
 
-function hideUsers() {
-  document.getElementById('output').innerText = ''
+      if(user){
+        crudAction(user)
+      } else {
+        alert(`User with ID ${userId} not found.`);
+      }
+    })
+    .catch(error => {
+      console.error('bad retrieving user', error);
+      alert('bad retrieving user');
+    });
 }
-
