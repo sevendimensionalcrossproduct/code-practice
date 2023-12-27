@@ -4,83 +4,68 @@
 import * as crud from './crud.js';
 window.crud = crud;
 
-//FETCH USER
-window.fetchUsers = function(){
-  fetch('http://localhost:3001/users')
-    .then(response => response.json())
-    .then (data => document.getElementById('output').innerText = JSON.stringify(data, null, 2))
-}
+const fetchUsers = () => fetch('http://localhost:3001/users')
+  .then(response => response.json())
+  .then(data => document.getElementById('output').innerText = JSON.stringify(data, null, 2));
 
-//CREATE NEW USER
-window.createUser= function(){
+const promptAndCreateUser = () => {
   const newUsername = prompt('Enter username: ');
   const newUser = { userId: -1, userName: newUsername };
   
   crud.createFetch(newUser)
     .then(fetchUsers);
-}
+};
 
-//DISPLAY userName
-window.getUsername = function() {
+const promptAndGetUsername = () => {
   const userId = prompt('Enter user ID: ');
 
-  crud.findId(userId, (user) => {
-    alert(`Username for user ID ${userId}: ${user.userName}`)
-  })
-}
+  crud.findId(userId, user => alert(`Username for user ID ${userId}: ${user.userName}`));
+};
 
-//UPDATE userName
-window.updateUsername = function() {
+const promptAndUpdateUsername = () => {
   const userId = prompt('Enter user ID to update: ');
 
-  crud.findId(userId, () =>{
-    const updatedUser = prompt('new username');
+  crud.findId(userId, () => {
+    const updatedUser = prompt('New username');
 
     crud.updateFetch(userId, updatedUser)
-      .then(response => {
-        if(!response.ok){
-          throw new Error(`bad ${response.status}`);
-        }
-        return response.json();
-      })
-      
+      .then(response => response.ok ? response.json() : Promise.reject(`Bad ${response.status}`))
       .then(updatedUser => {
         alert(`Username updated successfully: ${updatedUser.userName}`);
       })
-      .then(fetchUsers);
-  })
-}
+      .then(fetchUsers)
+      .catch(error => console.error('Error:', error));
+  });
+};
 
-window.deleteUsername = function() {
+const promptAndDeleteUsername = () => {
   const userId = prompt('Enter user ID to delete: ');
 
-  crud.findId(userId, (user) =>{
+  crud.findId(userId, user => {
     crud.deleteFetch(parseInt(userId))
-      .then(response => {
-        if (!response.ok){
-          throw new Error(`bad response ${response.status}`)
-        }
-        return response.json();
-      })
-      
-      .catch(error =>{
-        console.error('error:', error);
-      })
-      
-      .then(fetchUsers)
+      .then(response => response.ok ? response.json() : Promise.reject(`Bad response ${response.status}`))
+      .catch(error => console.error('Error:', error))
+      .then(fetchUsers);
 
-      alert(`username ${user.userName} was successfully deleted`);
-  })
-}
+    alert(`Username ${user.userName} was successfully deleted`);
+  });
+};
 
-//WIPE JSON STORAGE
-window.wipe = function(){
+const wipeUsers = () => {
   crud.deleteFetch()
-    .then(alert('userbase wiped successfully'))
+    .then(() => alert('Userbase wiped successfully'))
     .then(fetchUsers);
-}
+};
 
-//Hide JSON div
-window.hideUsers = function() {
-  document.getElementById('output').innerText = ''
-}
+const hideUsers = () => {
+  document.getElementById('output').innerText = '';
+};
+
+// Attach functions to the window object
+window.fetchUsers = fetchUsers;
+window.createUser = promptAndCreateUser;
+window.getUsername = promptAndGetUsername;
+window.updateUsername = promptAndUpdateUsername;
+window.deleteUsername = promptAndDeleteUsername;
+window.wipe = wipeUsers;
+window.hideUsers = hideUsers;

@@ -43,7 +43,7 @@ export function findId(userId, crudAction){
       return response.json();
     })
     .then(data => {
-      const users = Array.isArray(data) ? data : [data];
+      const users = data;
       const user = users.find(u => u.userId === parseInt(userId));
 
       if(user){
