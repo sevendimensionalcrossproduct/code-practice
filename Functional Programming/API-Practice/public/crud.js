@@ -1,69 +1,113 @@
 /* CRUD functions module */
 /*http://localhost:3001/crudB.js*/
 
+export const usersUrl = 'http://localhost:3001/users';
 
-//Fetch methods
-export function createFetch(updatedUser){
-  return fetch('http://localhost:3001/users', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(updatedUser)
-  });
+export async function createFetch(updatedUser){
+  try{
+    const response = await fetch(usersUrl, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(updatedUser)
+    });
+
+    if(!response.ok) {throw new Error(`Bad response: ${response.status}`);}
+
+    return response;
+  } catch (error) {
+    console.error('Create fetch failed:', error);
+    throw error;
+  }
 }
 
-export function readFetch(){
-  return fetch('http://localhost:3001/users',{
-    method: 'GET',
-    headers: {'Content-Type': 'application/json'}
-  })
-}
-
-export function updateFetch(userId, updatedUser){
-  return fetch(`http://localhost:3001/users/${userId}`,{
-    method: 'PATCH',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ userId: parseInt(userId), userName: updatedUser })
-  })
-}
-
-export function deleteFetch(input){
-  const url = input ? `http://localhost:3001/users/${input}` : 'http://localhost:3001/users';
-  return fetch(url, {
-    method: 'DELETE',
-    headers: {'Content-Type': 'application/json'}
-  })
-}
-
-export async function findId(userId, crudAction){
-  return readFetch()
-    .then(response => {
-      if (!response.ok){
-        throw new Error ('bad response');
-      }
-      return response.json();
+export async function readFetch(){
+  try{
+    const response = await fetch(usersUrl,{
+      method: 'GET',
+      headers: {'Content-Type': 'application/json'}
     })
-    .then(data => {
-      const users = data;
+
+    if(!response.ok) {throw new Error(`Bad response: ${response.status}`);}
+
+    return response;
+  } catch (error) {
+    console.error('Read fetch failed:', error);
+    throw error;
+  }
+}
+
+export async function updateFetch(userId, updatedUser){
+  try{
+    const response = await fetch(`${usersUrl}/${userId}`,{
+      method: 'PATCH',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ userId: parseInt(userId), userName: updatedUser })
+    })
+    
+
+    if(!response.ok) {
+      throw new Error(`Bad response: ${response.status}`);
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Update fetch failed:', error);
+    throw error;
+    
+  }
+}
+
+export async function deleteFetch(input) {
+  const url = input ? `${usersUrl}/${input}` : usersUrl;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {throw new Error(`Bad response: ${response.status}`);}
+
+    return response;
+  } catch (error) {
+    console.error('Delete fetch failed:', error);
+    throw error; 
+  }
+}
+
+
+export async function findId(userId, crudAction) {
+  try {
+    const response = await readFetch();
+
+    if (!response.ok) {throw new Error('Bad response');}
+
+    const users = await response.json();
+
+    if (/^\d+$/.test(userId) && userId > 0) {
       const user = users.find(u => u.userId === parseInt(userId));
 
-      if(user){
-        crudAction(user)
+      if (user) {
+        crudAction(user);
       } else {
         alert(`User with ID ${userId} not found.`);
       }
-    })
-    .catch(error => {
-      console.error('bad retrieving user', error);
-      alert('bad retrieving user');
-    });
+    } else {
+      alert('Invalid ID.');
+    }
+  } catch (error) {
+    console.error('Error retrieving user:', error);
+    alert('Error retrieving user');
+  }
 }
 
-export function specifyId(message, action){
-  const userId = prompt(message);
 
-  if (userId !== null){
-    action()
+export function specifyUserData(promptMessage, alertMessage, action){
+  const userData = prompt(promptMessage);
+
+  if (userData !== null && userData.trim() !== '') {
+    action(userData)
   } else {
-    alert('No ID provided');
+    alert(alertMessage);
   }
 }
