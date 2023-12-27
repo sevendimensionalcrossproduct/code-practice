@@ -34,8 +34,8 @@ export function deleteFetch(input){
   })
 }
 
-export function findId(userId, crudAction){
-  readFetch()
+export async function findId(userId, crudAction){
+  return readFetch()
     .then(response => {
       if (!response.ok){
         throw new Error ('bad response');
@@ -56,4 +56,14 @@ export function findId(userId, crudAction){
       console.error('bad retrieving user', error);
       alert('bad retrieving user');
     });
+}
+
+export function specifyId(message, action){
+  const userId = prompt(message);
+
+  if (userId !== null){
+    action()
+  } else {
+    alert('No ID provided');
+  }
 }

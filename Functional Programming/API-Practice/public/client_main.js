@@ -4,57 +4,99 @@
 import * as crud from './crud.js';
 window.crud = crud;
 
-const fetchUsers = () => fetch('http://localhost:3001/users')
-  .then(response => response.json())
-  .then(data => document.getElementById('output').innerText = JSON.stringify(data, null, 2));
+const fetchUsers = async() => {
+  try {
+    const response = await fetch('http://localhost:3001/users')
+    const data = await response.json()
+    document.getElementById('output').innerText = JSON.stringify(data, null, 2);
+  } catch (error) {
+    console.error('bad: ', error);
+  }
+}
 
-const promptAndCreateUser = () => {
+const promptAndCreateUser = async() => {
   const newUsername = prompt('Enter username: ');
-  const newUser = { userId: -1, userName: newUsername };
   
-  crud.createFetch(newUser)
-    .then(fetchUsers);
+  if (newUsername !== null){
+    const newUser = { userId: -1, userName: newUsername };
+    
+    try{
+      await crud.createFetch(newUser)
+      await fetchUsers();
+    } catch (error) {
+      console.error('bad: ',error);
+    }
+  } else {
+    alert('Nothing created.')
+  }
 };
 
-const promptAndGetUsername = () => {
+const promptAndGetUsername = async() => {
   const userId = prompt('Enter user ID: ');
-
-  crud.findId(userId, user => alert(`Username for user ID ${userId}: ${user.userName}`));
+  
+  if(userId !== null){
+    try{
+      await crud.findId(userId, user => alert(`Username for user ID ${userId}: ${user.userName}`));
+    } catch (error) {
+      console.error('bad: ', error);
+    }
+  } else {
+    alert('ID not specified');
+  }
 };
 
-const promptAndUpdateUsername = () => {
+const promptAndUpdateUsername = async() => {
   const userId = prompt('Enter user ID to update: ');
+  
+  if (userId !== null){
+    try {
+      await crud.findId(userId, async() => {
+        const updatedUser = prompt('New username');
 
-  crud.findId(userId, () => {
-    const updatedUser = prompt('New username');
-
-    crud.updateFetch(userId, updatedUser)
-      .then(response => response.ok ? response.json() : Promise.reject(`Bad ${response.status}`))
-      .then(updatedUser => {
-        alert(`Username updated successfully: ${updatedUser.userName}`);
-      })
-      .then(fetchUsers)
-      .catch(error => console.error('Error:', error));
-  });
+        const response = await crud.updateFetch(userId, updatedUser)
+        if (response.ok) {
+          const updatedUserData = await response.json();
+          alert(`Username updated successfully: ${updatedUserData.userName}`);
+          await fetchUsers();
+        } else {
+          throw new Error(`bad ${response.status}`)
+        }
+      });
+    } catch (error) {
+      console.error('bad: ', error);
+    }
+  } else {
+    alert('No ID provided.');
+  }
 };
 
-const promptAndDeleteUsername = () => {
+const promptAndDeleteUsername = async() => {
   const userId = prompt('Enter user ID to delete: ');
+  
+  if (userId !== null){
+    try{
+      await crud.findId(userId, async (user) => {
+      await crud.deleteFetch(parseInt(userId))
+      await fetchUsers();
 
-  crud.findId(userId, user => {
-    crud.deleteFetch(parseInt(userId))
-      .then(response => response.ok ? response.json() : Promise.reject(`Bad response ${response.status}`))
-      .catch(error => console.error('Error:', error))
-      .then(fetchUsers);
-
-    alert(`Username ${user.userName} was successfully deleted`);
-  });
+      alert(`Username ${user.userName} was successfully deleted`);
+      });
+    } catch (error) {
+      console.error('bad: ', error);
+    }
+  } else {
+    alert('User ID not provided')
+  }
 };
 
-const wipeUsers = () => {
-  crud.deleteFetch()
-    .then(() => alert('Userbase wiped successfully'))
-    .then(fetchUsers);
+const wipeUsers = async() => {
+  try{
+    await crud.deleteFetch();
+    alert('Userbase wiped successfully');
+    await fetchUsers();
+  } catch (error) { 
+  console.error(`bad: `, error)
+  }
 };
 
 const hideUsers = () => {
