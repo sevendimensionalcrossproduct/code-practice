@@ -5,6 +5,7 @@ module Main where
 import Functions
 import Web.Scotty
 import Network.Wai.Middleware.Static
+import Network.Wai.Middleware.Cors
 import System.FilePath ((</>))
 import Data.List (find, findIndex)
 
@@ -16,6 +17,15 @@ main =
   let jsonStorage = publicDirectory </> "users.json" in
 
   scotty 3001 ( 
+
+  middleware (cors (const $ Just $ simpleCorsResourcePolicy { corsOrigins = Just (["http://localhost:6969", "http://localhost:3001"], True)
+                                                         , corsMethods = ["GET", "HEAD", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+                                                         , corsRequestHeaders = ["Authorization", "Content-Type"]
+                                                         , corsMaxAge = Nothing
+                                                         , corsVaryOrigin = False
+                                                         , corsRequireOrigin = False
+                                                         , corsIgnoreFailures = False
+                                                         })) >>
   middleware (staticPolicy (addBase publicDirectory)) >>
 
   --Filesystem Bindings

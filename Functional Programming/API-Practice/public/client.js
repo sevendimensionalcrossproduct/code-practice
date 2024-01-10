@@ -1,4 +1,4 @@
-import * as crud from './crud';
+import * as crud from 'http://localhost:3001/crud';
 window.crud = crud;
 export const showUsers = async () => {
     try {
@@ -36,7 +36,7 @@ export const promptAndGetUsername = async () => {
         }
     });
 };
-const promptAndUpdateUsername = async () => {
+export const promptAndUpdateUsername = async () => {
     crud.specifyUserData('Enter ID to update:', 'No ID provided', async (userId) => {
         try {
             await crud.findId(userId, async () => {
