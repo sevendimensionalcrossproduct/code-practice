@@ -54,5 +54,29 @@
     ],
     "ext": "tsx",
     "exec": "babel pisshitballs.tsx --presets @babel/preset-react,@babel/preset-typescript --out-file pisshitballs.js"
-  }
+  },
+  "typescript": {
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "lib": [
+      "dom",
+      "es2015",
+      "es2017"
+    ],
+    "jsx": "react",
+    "sourceMap": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "**/*"
+  ],
+  "exclude": [
+    "node_modules"
+    ]
+    }
 }
