@@ -32,7 +32,7 @@ function pisshitcock() {
 function Cockmaster() {
   const [message, setMessage] = React.useState('cockle until u groggle');
   const toggleMessage = () => {
-    setMessage(message === 'cockle until u groggle' ? 'asujdhasjfhaf' : 'cockle until u groggle');
+    setMessage(message === 'cockle until u groggle' ? 'cock' : 'cockle until u groggle');
   };
   const [count, setCount] = React.useState(0);
   const [inputValue, setInputValue] = React.useState('');
