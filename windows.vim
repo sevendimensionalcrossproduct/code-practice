@@ -441,7 +441,8 @@ end
   } 
    
    require('lspconfig')['cssls'].setup {
-    capabilities = capabilities
+    capabilities = capabilities,
+    filetypes = { "css", "scss", "less" }
   } 
 
    require('lspconfig')['jdtls'].setup {
@@ -511,5 +512,14 @@ require('lspconfig')['sqlls'].setup{
     },
   },
     }
+
+  require("nvim-tree").setup({
+})
+
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    require("nvim-tree.api").tree.open()
+  end
+})
 
 EOF
