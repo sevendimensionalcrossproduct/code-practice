@@ -518,7 +518,9 @@ require('lspconfig')['sqlls'].setup{
 
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
-    require("nvim-tree.api").tree.open()
+    local api = require("nvim-tree.api")
+    api.tree.open()
+    vim.cmd("wincmd p")
   end
 })
 
