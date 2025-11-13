@@ -81,6 +81,8 @@ Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'terrortylor/nvim-comment'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.9' }
+Plug 'nvzone/volt'
+Plug 'gisketch/triforce.nvim'
 
 "installed this for vue remove if it causes shit
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -196,6 +198,13 @@ let g:closetag_enable_react_fragment = 1
 
 
 lua <<EOF 
+
+require("triforce").setup({
+  keymap = {
+    show_profile = "<leader>tf",
+  },
+})
+
 
 vim.diagnostic.config({
     virtual_text = {
