@@ -83,6 +83,7 @@ Plug 'terrortylor/nvim-comment'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.9' }
 Plug 'nvzone/volt'
 Plug 'gisketch/triforce.nvim'
+Plug 'luc-tielen/telescope_hoogle'
 
 "installed this for vue remove if it causes shit
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -198,6 +199,11 @@ let g:closetag_enable_react_fragment = 1
 
 
 lua <<EOF 
+local telescope = require('telescope')
+telescope.setup {
+  -- opts...
+}
+telescope.load_extension('hoogle')
 
 require("triforce").setup({
   keymap = {
