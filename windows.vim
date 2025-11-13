@@ -10,6 +10,9 @@ set shiftwidth=4
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
+command! Diag lua vim.diagnostic.setqflist()
+command! Rc belowright split $MYVIMRC
+
 "Hello from windows! Dont forget to git sparse-checkout set !/* (with --no-cone) to ignore top level files other than what u add with sparse-checkout add 
 
 highlight! DiagnosticUnderlineError gui=undercurl guisp=Red
@@ -46,6 +49,7 @@ Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+Plug 'b0o/schemastore.nvim'
 
 Plug 'norcalli/nvim-colorizer.lua' 
 Plug 'purescript-contrib/purescript-vim'
@@ -76,6 +80,7 @@ Plug 'akinsho/bufferline.nvim', { 'tag': '*' }
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'terrortylor/nvim-comment'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.9' }
 
 "installed this for vue remove if it causes shit
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -117,7 +122,6 @@ call plug#end()
 " anything
 
 let $PATH = "/home/serna/.ghcup/bin:" . $PATH
-
 
 " Enable autocompletion
 set omnifunc=syntaxcomplete#Complete
@@ -192,6 +196,29 @@ let g:closetag_enable_react_fragment = 1
 
 
 lua <<EOF 
+
+vim.diagnostic.config({
+    virtual_text = true,      -- disable inline text (optional)
+    signs = true,              -- show gutter signs
+    underline = true,          -- highlight problematic code
+    update_in_insert = false,  -- don't update diagnostics while typing
+    severity_sort = true,      -- sort by severity
+    float = {
+        focusable = false,     -- popup is not focusable
+        style = "minimal",     -- clean look
+        border = "rounded",    -- rounded border
+        source = "always",     -- show source of diagnostic
+        header = "",
+        prefix = "",
+    },
+})
+
+vim.o.updatetime = 250 -- 250ms instead of default 4000ms
+vim.api.nvim_create_autocmd("CursorHold", {
+    callback = function()
+        vim.diagnostic.open_float(nil, { focusable = false })
+    end
+})
 
 require("nvim-autopairs").setup {}
 require("bufferline").setup{}
@@ -333,10 +360,10 @@ require('lualine').setup {
     })
   })
 
-local lspconfig = require('lspconfig')
+--local lspconfig = require('lspconfig')
 local util = require("lspconfig.util")
 
-lspconfig.purescriptls.setup {
+ vim.lsp.config("purescriptls", {
   on_attach = on_attach,
   settings = {
     purescript = {
@@ -346,7 +373,9 @@ lspconfig.purescriptls.setup {
   flags = {
     debounce_text_changes = 150,
   }
-}
+})
+vim.lsp.enable({ "purescriptls" })
+
   -- set up lspkind 
   require('lspkind').init({
     -- DEPRECATED (use mode instead): enables text annotations
@@ -398,112 +427,139 @@ lspconfig.purescriptls.setup {
     },
 })
 
-local function is_deno_project(fname)
-    local root = lspconfig.util.root_pattern("deno.json", "deno.jsonc")(fname)
-    return root ~= nil
-end
+  -- Set up lspconfig.
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 
-  require('lspconfig')['denols'].setup {
+ vim.lsp.config("clangd", {
+  capabilities = capabilities,
+  cmd = { "clangd" }, 
+  filetypes = { "c", "cpp" },
+})
+ vim.lsp.enable({ "clangd" })
+
+
+vim.lsp.config("denols", {
     on_attach = on_attach,
-    root_dir = require("lspconfig").util.root_pattern("deno.json", "deno.jsonc"),
+    root_markers = {"deno.json", "deno.jsonc"},
+})
+vim.lsp.enable({ "denols" })
+
+vim.lsp.config('ts_ls', {
+    on_attach = on_attach,
+    root_markers = {"package.json"},
     single_file_support = false,
-}
+})
+vim.lsp.enable({ "ts_ls" })
 
-  require('lspconfig')['ts_ls'].setup { 
-  cmd = { "C:\\Users\\Giga\\AppData\\Roaming\\npm\\typescript-language-server.cmd", "--stdio" },
-  filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+
+vim.lsp.config("html", {
   capabilities = capabilities,
-  root_dir = require'lspconfig'.util.root_pattern("package.json"),
-  single_file_support = true,  -- This disables single file support for the TypeScript language server
-  on_attach = function(client, bufnr)
-        local fname = vim.api.nvim_buf_get_name(bufnr)
-        if is_deno_project(fname) then
-            vim.schedule(function()
-                client.stop() 
-            end)
-            return
-        end
-    end,
-}
-
-
-  require('lspconfig')['ts_ls'].setup { 
-  cmd = { "C:\\Users\\Giga\\AppData\\Roaming\\npm\\typescript-language-server.cmd", "--stdio" },
-  on_attach = on_attach,
-  filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-  capabilities = capabilities,
-  root_dir = require'lspconfig'.util.root_pattern("package.json"),
-  single_file_support = false,  -- This disables single file support for the TypeScript language server
-}
-
-   require('lspconfig')['html'].setup {
-    capabilities = capabilities
-  } 
+})
+vim.lsp.enable({ "html" })
    
-   require('lspconfig')['cssls'].setup {
+vim.lsp.config("cssls", {
     capabilities = capabilities,
     filetypes = { "css", "scss", "less" }
-  } 
+  })
+vim.lsp.enable({"cssls"})
 
-   require('lspconfig')['jdtls'].setup {
+vim.lsp.config("jdtls", {
     capabilities = capabilities
-  } 
+    })
+vim.lsp.enable({"jdtls"})
 
-   require('lspconfig')['purescriptls'].setup{
+vim.lsp.config("purescriptls", {
+    capabilities = capabilities -- Deps: Install "spago", "purescript", "purescript-language-server" using npm -g
+                                -- On windows install "purescript" manually from "https://github.com/purescript/purescript/releases" instead of npm -g it wont work lol
+    })
+vim.lsp.enable({"purescriptls"})
+
+
+vim.lsp.config("gopls", {
     capabilities = capabilities
-  }
+    })
+vim.lsp.enable({"gopls"})
 
-  require('lspconfig')['hls'].setup{
+vim.lsp.config("hls", {
+    capabilities = capabilities,
+    cmd = { "haskell-language-server-wrapper", "--lsp" },
     filetypes = { 'haskell', 'hs' , 'lhaskell', 'cabal' },
-    capabilities = capabilities
+    root_markers = { '*.cabal' },
+    })
+vim.lsp.enable({"hls"})
 
-  }
   
 
-require('lspconfig')['sqlls'].setup{
+vim.lsp.config("sqlls", {
   capabilities = capabilities,
   root_dir = function() return vim.loop.cwd() end,
-}
+    })
+vim.lsp.enable({"sqlls"})
 
 
-  require('lspconfig')['prolog_ls'].setup{
+
+vim.lsp.config("prolog_ls", {
     capabilities = capabilities
-  }
+    })
+vim.lsp.enable({"prolog_ls"})
 
-   require('lspconfig')['scheme_langserver'].setup{
+
+vim.lsp.config("scheme_langserver", {
     capabilities = capabilities
-  } 
+    })
+vim.lsp.enable({"scheme_langserver"})
 
-  require'lspconfig'.asm_lsp.setup{
-   cmd = {"/home/serna/.cargo/bin/asm-lsp"},
-    filetypes = {"asm", "vmasm"},
-    root_dir = function() return vim.loop.cwd() end,
-    capabilities = capabilities,
-    on_init = function(client)
-        -- Disable diagnostics (errors and warnings)
-        client.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-            vim.lsp.diagnostic.on_publish_diagnostics, {
-                severity_sort = true,
-                underline = true,
-                signs = true,
-            }
-        )
-    end,
-  }
+  
+vim.lsp.config("rust_analyzer", {
+    capabilities = capabilities
+    })
+vim.lsp.enable({"rust_analyzer"})
 
-   require 'lspconfig'.volar.setup { -- btw current volar is unusable for unknown reasons use this version instead: MasonInstall vue-language-server@1.8.27  
-    -- install with npm @vue/typescript-plugin and @vue/language-server globally (and whatever bs the warnings tell u to), also make sure to use tsserver if ur using 1.8.27 because thats what that version integrates to
-    --u might also (???) install typescript-language-server (from npm -g) and vue-language-server which are different from the previously mentioned ones because apparently the vue ecosystem is a clusterfuck, good luck
-       filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
-       init_options = {
-      typescript = {
-      tsdk = "C:\\Users\\Giga\\AppData\\Roaming\\npm\\node_modules\\typescript\\lib"
-      -- Alternative location if installed as root:
-      -- tsdk = '/usr/local/lib/node_modules/typescript/lib'
-    }
-  }
-}
-  require  'lspconfig'.jsonls.setup {
+
+   --install these two using pip and then add the pip packages to path
+
+vim.lsp.config("pylsp", {})
+vim.lsp.enable({"pylsp"})
+vim.lsp.config("jedi_language_server", {})
+vim.lsp.enable({"jedi_language_server"})
+
+
+--vim.lsp.config("asm_lsp", {
+--    --cmd = {"/home/serna/.cargo/bin/asm-lsp"},
+--    filetypes = {"asm", "vmasm"},
+--    root_dir = function() return vim.loop.cwd() end,
+--   capabilities = capabilities,
+--    on_init = function(client)
+--        -- Disable diagnostics (errors and warnings)
+--        client.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+--            vim.lsp.diagnostic.on_publish_diagnostics, {
+--                severity_sort = true,
+--                underline = true,
+--                signs = true,
+--            }
+--        )
+--    end,
+--    })
+--vim.lsp.enable({"asm_lsp"})
+
+
+-- btw current volar is unusable for unknown reasons use this version instead: MasonInstall vue-language-server@1.8.27
+-- install with npm @vue/typescript-plugin and @vue/language-server globally (and whatever bs the warnings tell u to), also make sure to use tsserver if ur using 1.8.27 because thats what that version integrates to
+--u might also (???) install typescript-language-server (from npm -g) and vue-language-server which are different from the previously mentioned ones because apparently the vue ecosystem is a clusterfuck, good luck
+
+--vim.lsp.config("volar", {
+--       filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue', 'json' },
+--       init_options = {
+--      typescript = {
+--      tsdk = "C:\\Users\\Giga\\AppData\\Roaming\\npm\\node_modules\\typescript\\lib"
+--    }
+--  }
+--    })
+--vim.lsp.enable({"volar"})
+
+
+vim.lsp.config("jsonls", {
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
   settings = {
     json = {
@@ -511,7 +567,9 @@ require('lspconfig')['sqlls'].setup{
       validate = { enable = true },
     },
   },
-    }
+      })
+vim.lsp.enable({"jsonls"})
+
 
   require("nvim-tree").setup({
 })
@@ -519,9 +577,9 @@ require('lspconfig')['sqlls'].setup{
 vim.api.nvim_create_autocmd("VimEnter", {
   callback = function()
     local api = require("nvim-tree.api")
-    api.tree.open()
-    vim.cmd("wincmd p")
+    api.tree.open()         -- open tree
+    vim.cmd("wincmd p")  -- focus stays in previous buffer
   end
 })
-
+  
 EOF
