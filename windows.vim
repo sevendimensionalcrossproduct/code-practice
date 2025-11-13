@@ -334,6 +334,7 @@ require('lualine').setup {
   })
 
 local lspconfig = require('lspconfig')
+local util = require("lspconfig.util")
 
 lspconfig.purescriptls.setup {
   on_attach = on_attach,
@@ -397,30 +398,34 @@ lspconfig.purescriptls.setup {
     },
 })
 
-  -- Set up lspconfig.
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-  require('lspconfig')['clangd'].setup {
-    capabilities = capabilities
-  }
+local function is_deno_project(fname)
+    local root = lspconfig.util.root_pattern("deno.json", "deno.jsonc")(fname)
+    return root ~= nil
+end
 
   require('lspconfig')['denols'].setup {
-  on_attach = on_attach,
-  root_dir = require'lspconfig'.util.root_pattern("deno.json", "deno.jsonc"),
-  filetypes = {
-    'javascript',
-    'javascriptreact',
-    'javascript.jsx',
-    'typescript',
-    'typescriptreact',
-    'typescript.tsx',
-    'markdown',
-  },
-  init_options = {
-    config = './deno.jsonc',
-    lint = true,
-  },
+    on_attach = on_attach,
+    root_dir = require("lspconfig").util.root_pattern("deno.json", "deno.jsonc"),
+    single_file_support = false,
 }
+
+  require('lspconfig')['ts_ls'].setup { 
+  cmd = { "C:\\Users\\Giga\\AppData\\Roaming\\npm\\typescript-language-server.cmd", "--stdio" },
+  filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+  capabilities = capabilities,
+  root_dir = require'lspconfig'.util.root_pattern("package.json"),
+  single_file_support = true,  -- This disables single file support for the TypeScript language server
+  on_attach = function(client, bufnr)
+        local fname = vim.api.nvim_buf_get_name(bufnr)
+        if is_deno_project(fname) then
+            vim.schedule(function()
+                client.stop() 
+            end)
+            return
+        end
+    end,
+}
+
 
   require('lspconfig')['ts_ls'].setup { 
   cmd = { "C:\\Users\\Giga\\AppData\\Roaming\\npm\\typescript-language-server.cmd", "--stdio" },
