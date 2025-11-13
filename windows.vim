@@ -198,7 +198,10 @@ let g:closetag_enable_react_fragment = 1
 lua <<EOF 
 
 vim.diagnostic.config({
-    virtual_text = true,      -- disable inline text (optional)
+    virtual_text = {
+        prefix = '●',
+        source = true,
+      },
     signs = true,              -- show gutter signs
     underline = true,          -- highlight problematic code
     update_in_insert = false,  -- don't update diagnostics while typing
